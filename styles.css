@@ -1,95 +1,166 @@
 body {
-    background-color: azure;
+    background: linear-gradient(to right, #4facfe, #7fb3d5);
+    font-family: 'Arial', sans-serif;
     text-align: center;
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    margin: 0;
+    padding: 0;
 }
 
-.main-container {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+header {
+    background: #002f6c;
+    color: white;
+    padding: 20px;
+    font-size: 24px;
 }
 
-.section {
-    background-color: rgb(215, 209, 202);
+.portada, .modulos {
+    background: white;
+    max-width: 800px; 
+    margin: 40px auto;
+    padding: 40px; 
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; 
+}
+
+.portada {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 600px;
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
+}
+
+.portada img {
+    max-width: 100%;
+    height: auto;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.portada .btn-ingresar {
+    background: #2874a6;
+    color: white;
+    border: none;
+    padding: 20px 25px;
+    font-size: 20px; 
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin-top: 20px; 
+}
+
+.portada .btn-ingresar:hover {
+    background: #979a9a;
+}
+
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tab-button {
+    background: #006d77;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.tab-button:hover, .tab-button.active {
+    background: #83c5be;
+}
+
+.tab-content-container {
+    margin-top: 20px;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
 }
 
 .input-group {
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
-.input-group select {
-    margin-left: 10px;
+.input-group label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
 }
 
-.line-container {
+.input-group input, .input-group select {
+    width: 100%;
+    padding: 15px; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; 
+}
+
+.btn-calculate, .btn-reset, .btn-select {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 20px; 
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn-calculate:hover, .btn-reset:hover, .btn-select:hover {
+    background: #218838;
+}
+
+.linea-ajustes {
+    margin-top: 20px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 60px 20px;
-    width: 100%;
+    padding: 10px 0;
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
 }
 
-.line {
-    height: 3px;
-    background: black;
+.bloque-ajuste {
+    width: 50px;
+    height: 50px;
+    margin: 0 5px;
     display: flex;
     align-items: center;
-    transition: width 0.3s ease-in-out;
-    min-width: 100px;
-}
-
-button {
-    margin: 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: opacity 0.3s;
-}
-
-button:hover {
-    opacity: 0.8;
-}
-
-.btn-calculate {
-    background-color: blue;
+    justify-content: center;
     color: white;
+    font-weight: bold;
+    border-radius: 5px;
 }
 
-.triangle {
-    width: 0;
-    height: 0;
-    border-left: 12.5px solid transparent;
-    border-right: 12.5px solid transparent;
-    border-bottom: 25px solid red;
-    display: inline-block;
-    margin: 5px;
+.resultado-final {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px; 
 }
 
-.square {
-    width: 25px;
-    height: 25px;
-    background-color: green;
-    cursor: grab;
-    margin: 10px;
-    border-radius: 3px;
+.paso-a-paso {
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: left;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsivo */
 @media (max-width: 768px) {
-    .main-container {
-        flex-direction: column;
-        align-items: center;
+    .portada, .modulos {
+        width: 90%;
+    }
+    .bloque-ajuste {
+        width: 40px;
+        height: 40px;
     }
 }

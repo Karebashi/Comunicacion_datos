@@ -8,74 +8,70 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Comunicación de Datos</h1>
+    <header>
+        <h1>Comunicación de Datos</h1>
+    </header>
     
-    <div class="main-container">
-        <div class="section">
-            <h2>Calculadora de Atenuación y Ganancia</h2>
+    <div id="portada" class="portada">
+        <h2>Bienvenido a la Calculadora de Comunicación de Datos</h2>
+        <img src="img/calcular.png" alt="Imagen de portada">
+        <button class="btn-ingresar" onclick="mostrarModulos()">Ingresar</button>
+    </div>
 
-            <div class="input-group">
-                <label for="potenciaEntrada">Potencia de entrada (mW):</label>
-                <input type="number" id="potenciaEntrada" placeholder="Ingrese la potencia en mW">
-            </div>
-
-            <div class="line-container">
-                <div class="line" id="linea"></div>
-            </div>
-
-            <div class="input-group">
-                <label for="potenciaSalida">Potencia de salida (mW):</label>
-                <input type="number" id="potenciaSalida" readonly aria-disabled="true">
-            </div>
-
-            <div class="input-group">
-                <label for="potenciaSalidaDbm">Potencia de salida (dBm):</label>
-                <input type="number" id="potenciaSalidaDbm" readonly aria-disabled="true">
-            </div>
-
-            <div class="input-group">
-                <div class="triangle" draggable="true"></div>
-                <div class="square" draggable="true"></div>
-            </div>
-
-            <button class="btn-calculate" onclick="calcularPotenciaSalida()">Calcular</button>
+    <div id="modulos" class="modulos" style="display:none">
+        <h2>¿Qué quieres hacer hoy?</h2>
+        <div class="tab-container">
+            <button class="tab-button" onclick="openTab(event, 'atenuacion')">Atenuación y Ganancia</button>
+            <button class="tab-button" onclick="openTab(event, 'transmision')">Tiempo de Transmisión</button>
         </div>
-
-        <div class="section">
-            <h2>Calculadora de Tiempo de Transmisión</h2>
-
-            <div class="input-group">
-                <label for="tamanoMensaje">Tamaño del mensaje:</label>
-                <input type="number" id="tamanoMensaje" step="any" min="0.0001" placeholder="Ingrese el tamaño">
-                <select id="unidadTamano">
-                    <option value="bits">bits</option>
-                    <option value="bytes">bytes</option>
-                    <option value="kb">kilobits (Kb)</option>
-                    <option value="kB">kilobytes (KB)</option>
-                    <option value="mb">megabits (Mb)</option>
-                    <option value="MB">megabytes (MB)</option>
-                    <option value="gb">gigabits (Gb)</option>
-                    <option value="GB">gigabytes (GB)</option>
-                </select>
+        <div class="tab-content-container">
+            <div id="atenuacion" class="tab-content">
+                <h2>Calculadora de Atenuación y Ganancia</h2>
+                <div class="input-group">
+                    <label for="potenciaEntrada">Potencia de entrada (mW):</label>
+                    <input type="number" id="potenciaEntrada" placeholder="Ingrese la potencia en mW">
+                </div>
+                <div class="input-group">
+                    <label for="ajusteDb">Ajuste (dB):</label>
+                    <input type="number" id="ajusteDb" placeholder="Ingrese la atenuación o ganancia en dB">
+                </div>
+                <button class="btn-calculate" onclick="agregarAjuste()">Agregar Ajuste</button>
+                <div id="lineaAjustes" class="linea-ajustes"></div>
+                <button class="btn-calculate" onclick="calcularPotenciaFinal()">Calcular Potencia Final</button>
+                <button class="btn-reset" onclick="reiniciarAjustes()">Reiniciar</button>
+                <div id="resultadoFinal" class="resultado-final"></div>
+                <div id="pasoAPasoAtenuacion" class="paso-a-paso"></div>
             </div>
 
-            <div class="input-group">
-                <label for="velocidadTransmision">Velocidad de transmisión:</label>
-                <input type="number" id="velocidadTransmision" step="any" min="0.0001" placeholder="Ingrese la velocidad">
-                <select id="unidadVelocidad">
-                    <option value="bps">bps</option>
-                    <option value="kbps">kbps</option>
-                    <option value="mbps">mbps</option>
-                    <option value="gbps">gbps</option>
-                </select>
+            <div id="transmision" class="tab-content">
+                <h2>Calculadora de Tiempo de Transmisión</h2>
+                <div class="input-group">
+                    <label for="tamanoMensaje">Tamaño del mensaje:</label>
+                    <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
+                    <div>
+                        <button class="btn-select" onclick="mostrarUnidades('bits')">Bits</button>
+                        <button class="btn-select" onclick="mostrarUnidades('bytes')">Bytes</button>
+                    </div>
+                    <select id="unidadTamano" style="display:none;"></select>
+                </div>
+                <div class="input-group">
+                    <label for="velocidadTransmision">Velocidad de transmisión:</label>
+                    <input type="number" id="velocidadTransmision" placeholder="Ingrese la velocidad">
+                    <select id="unidadVelocidad">
+                        <option value="bps">bps</option>
+                        <option value="kbps">kbps</option>
+                        <option value="mbps">mbps</option>
+                        <option value="gbps">gbps</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="tiempoTransmision">Tiempo de transmisión (s):</label>
+                    <input type="number" id="tiempoTransmision" readonly>
+                </div>
+                <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo</button>
+                <div id="listaDatosTransmision" class="lista-datos"></div>
+                <div id="pasoAPasoTransmision" class="paso-a-paso"></div>
             </div>
-
-            <div class="input-group">
-                <label for="tiempoTransmision">Tiempo de transmisión (s):</label>
-                <input type="number" id="tiempoTransmision" readonly aria-disabled="true">
-            </div>
-
-            <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo de Transmisión</button>
         </div>
     </div>
 </body>
