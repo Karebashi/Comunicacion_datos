@@ -1,0 +1,95 @@
+body {
+    background-color: azure;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.section {
+    background-color: rgb(215, 209, 202);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    margin: 10px 0;
+}
+
+.input-group select {
+    margin-left: 10px;
+}
+
+.line-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 60px 20px;
+    width: 100%;
+}
+
+.line {
+    height: 3px;
+    background: black;
+    display: flex;
+    align-items: center;
+    transition: width 0.3s ease-in-out;
+    min-width: 100px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.btn-calculate {
+    background-color: blue;
+    color: white;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 12.5px solid transparent;
+    border-right: 12.5px solid transparent;
+    border-bottom: 25px solid red;
+    display: inline-block;
+    margin: 5px;
+}
+
+.square {
+    width: 25px;
+    height: 25px;
+    background-color: green;
+    cursor: grab;
+    margin: 10px;
+    border-radius: 3px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}

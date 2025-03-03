@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Decibeles y Tiempo de Transmisión</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <h1>Comunicación de Datos</h1>
+    
+    <div class="main-container">
+        <div class="section">
+            <h2>Calculadora de Atenuación y Ganancia</h2>
+
+            <div class="input-group">
+                <label for="potenciaEntrada">Potencia de entrada (mW):</label>
+                <input type="number" id="potenciaEntrada" placeholder="Ingrese la potencia en mW">
+            </div>
+
+            <div class="line-container">
+                <div class="line" id="linea"></div>
+            </div>
+
+            <div class="input-group">
+                <label for="potenciaSalida">Potencia de salida (mW):</label>
+                <input type="number" id="potenciaSalida" readonly aria-disabled="true">
+            </div>
+
+            <div class="input-group">
+                <label for="potenciaSalidaDbm">Potencia de salida (dBm):</label>
+                <input type="number" id="potenciaSalidaDbm" readonly aria-disabled="true">
+            </div>
+
+            <div class="input-group">
+                <div class="triangle" draggable="true"></div>
+                <div class="square" draggable="true"></div>
+            </div>
+
+            <button class="btn-calculate" onclick="calcularPotenciaSalida()">Calcular</button>
+        </div>
+
+        <div class="section">
+            <h2>Calculadora de Tiempo de Transmisión</h2>
+
+            <div class="input-group">
+                <label for="tamanoMensaje">Tamaño del mensaje:</label>
+                <input type="number" id="tamanoMensaje" step="any" min="0.0001" placeholder="Ingrese el tamaño">
+                <select id="unidadTamano">
+                    <option value="bits">bits</option>
+                    <option value="bytes">bytes</option>
+                    <option value="kb">kilobits (Kb)</option>
+                    <option value="kB">kilobytes (KB)</option>
+                    <option value="mb">megabits (Mb)</option>
+                    <option value="MB">megabytes (MB)</option>
+                    <option value="gb">gigabits (Gb)</option>
+                    <option value="GB">gigabytes (GB)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="velocidadTransmision">Velocidad de transmisión:</label>
+                <input type="number" id="velocidadTransmision" step="any" min="0.0001" placeholder="Ingrese la velocidad">
+                <select id="unidadVelocidad">
+                    <option value="bps">bps</option>
+                    <option value="kbps">kbps</option>
+                    <option value="mbps">mbps</option>
+                    <option value="gbps">gbps</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="tiempoTransmision">Tiempo de transmisión (s):</label>
+                <input type="number" id="tiempoTransmision" readonly aria-disabled="true">
+            </div>
+
+            <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo de Transmisión</button>
+        </div>
+    </div>
+</body>
+</html>
