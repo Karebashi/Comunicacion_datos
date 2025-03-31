@@ -43,6 +43,9 @@ function agregarAjuste() {
 
     ajustes.push(ajusteDb);
     mostrarAjustes();
+
+    // Borrar el valor del ajuste después de agregarlo
+    document.getElementById("ajusteDb").value = '';
 }
 
 function mostrarAjustes() {
@@ -74,7 +77,7 @@ function calcularPotenciaFinal() {
     resultadoFinal.innerHTML = `Potencia final en mW: ${potenciaFinalMw.toFixed(2)} mW<br>Potencia final en dBm: ${potenciaDbm.toFixed(2)} dBm`;
 
     let pasoAPasoAtenuacion = document.getElementById('pasoAPasoAtenuacion');
-    pasoAPasoAtenuacion.innerHTML = pasoAPaso;
+    pasoAPasoAtenuacion.innerHTML = pasoAPaso + `<br><strong>Ecuación:</strong> Potencia (dBm) = 10 * log10(Potencia (mW))<br>Potencia (mW) = 10^(Potencia (dBm) / 10)`;
 }
 
 function reiniciarAjustes() {
@@ -150,129 +153,45 @@ function calcularTiempoTransmision() {
         Tiempo de transmisión: ${tiempo.toFixed(4)} segundos
     `;
 
-    document.getElementById('pasoAPasoTransmision').innerHTML = pasoAPasoTransmision;
+    document.getElementById('pasoAPasoTransmision').innerHTML = pasoAPasoTransmision + `<br><strong>Ecuación:</strong> Tiempo de transmisión = Tamaño del mensaje (bits) / Velocidad de transmisión (bps)`;
 }
 
-function calcularFrecuenciaModulada() {
-    let amplitudPortadora = parseFloat(document.getElementById("amplitudPortadora").value);
-    let frecuenciaPortadora = parseFloat(document.getElementById("frecuenciaPortadora").value);
-    let amplitudModuladora = parseFloat(document.getElementById("amplitudModuladora").value);
-    let frecuenciaModuladora = parseFloat(document.getElementById("frecuenciaModuladora").value);
+function calcularDbm() {
+    let valorDbm1 = parseFloat(document.getElementById("valorDbm1").value);
+    let valorDbm2 = parseFloat(document.getElementById("valorDbm2").value);
+    let operacion = document.getElementById("operacion").value;
 
-    if (isNaN(amplitudPortadora) || isNaN(frecuenciaPortadora) || isNaN(amplitudModuladora) || isNaN(frecuenciaModuladora) || amplitudPortadora <= 0 || frecuenciaPortadora <= 0 || amplitudModuladora <= 0 || frecuenciaModuladora <= 0) {
+    if (isNaN(valorDbm1) || isNaN(valorDbm2)) {
         alert("Ingrese valores válidos.");
         return;
     }
 
-    let ctxPortadora = document.getElementById('graficaPortadora').getContext('2d');
-    let ctxModuladora = document.getElementById('graficaModuladora').getContext('2d');
-    let ctxModulada = document.getElementById('graficaModulada').getContext('2d');
-    let dataPortadora = [];
-    let dataModuladora = [];
-    let dataModulada = [];
-    let labels = [];
-    let t = 0;
-    let dt = 0.001;
+    let mw1 = dbmMw(valorDbm1);
+    let mw2 = dbmMw(valorDbm2);
+    let resultadoMw;
+    let resultadoDbm;
 
-    for (let i = 0; i < 1000; i++) {
-        let portadora = amplitudPortadora * Math.sin(2 * Math.PI * frecuenciaPortadora * t);
-        let moduladora = amplitudModuladora * Math.sin(2 * Math.PI * frecuenciaModuladora * t);
-        let modulada = (amplitudPortadora + moduladora) * Math.sin(2 * Math.PI * frecuenciaPortadora * t);
-
-        dataPortadora.push(portadora);
-        dataModuladora.push(moduladora);
-        dataModulada.push(modulada);
-        labels.push(t.toFixed(2));
-        t += dt;
+    if (operacion === "sumar") {
+        resultadoMw = mw1 + mw2;
+        resultadoDbm = mwDbm(resultadoMw);
+    } else if (operacion === "restar") {
+        resultadoMw = mw1 - mw2;
+        if (resultadoMw <= 0) {
+            alert("El resultado de la resta es menor o igual a 0 mW, lo cual no es válido.");
+            return;
+        }
+        resultadoDbm = mwDbm(resultadoMw);
     }
 
-    new Chart(ctxPortadora, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Señal Portadora',
-                data: dataPortadora,
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                fill: false
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tiempo (s)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Amplitud'
-                    }
-                }
-            }
-        }
-    });
+    document.getElementById("resultadoDbm").innerHTML = `Resultado: ${resultadoDbm.toFixed(2)} dBm (${resultadoMw.toFixed(2)} mW)`;
 
-    new Chart(ctxModuladora, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Señal Moduladora',
-                data: dataModuladora,
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                fill: false
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tiempo (s)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Amplitud'
-                    }
-                }
-            }
-        }
-    });
+    let pasoAPasoDbm = `
+        Valor 1: ${valorDbm1} dBm (${mw1.toFixed(2)} mW)<br>
+        Valor 2: ${valorDbm2} dBm (${mw2.toFixed(2)} mW)<br>
+        Operación: ${operacion === "sumar" ? "Suma" : "Resta"}<br>
+        Resultado en mW: ${resultadoMw.toFixed(2)} mW<br>
+        Resultado en dBm: ${resultadoDbm.toFixed(2)} dBm
+    `;
 
-    new Chart(ctxModulada, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Señal Modulada (AM)',
-                data: dataModulada,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1,
-                fill: false
-            }]
-        },
-        options: {
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Tiempo (s)'
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Amplitud'
-                    }
-                }
-            }
-        }
-    });
+    document.getElementById('pasoAPasoDbm').innerHTML = pasoAPasoDbm + `<br><strong>Ecuación:</strong> Potencia (dBm) = 10 * log10(Potencia (mW))<br>Potencia (mW) = 10^(Potencia (dBm) / 10)`;
 }

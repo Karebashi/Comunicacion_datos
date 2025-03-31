@@ -23,14 +23,18 @@
         <div class="tab-container">
             <button class="tab-button" onclick="openTab(event, 'atenuacion')">Atenuación y Ganancia</button>
             <button class="tab-button" onclick="openTab(event, 'transmision')">Tiempo de Transmisión</button>
+            <button class="tab-button" onclick="openTab(event, 'dbm')">Calculadora de dBm/dB</button>
         </div>
         <div class="tab-content-container">
             <div id="atenuacion" class="tab-content">
                 <h2>Calculadora de Atenuación y Ganancia</h2>
+                <p>Utiliza esta calculadora para determinar la potencia final después de aplicar ajustes de atenuación o ganancia.</p>
                 <div class="input-group">
                     <label for="potenciaEntrada">Potencia de entrada (mW):</label>
                     <input type="number" id="potenciaEntrada" placeholder="Ingrese la potencia en mW">
                 </div>
+                <p>Sigue agregando la cantidad deseada de ajustes, valores positivos equivalen a ganacias y negativos a atenuación</p>
+
                 <div class="input-group">
                     <label for="ajusteDb">Ajuste (dB):</label>
                     <input type="number" id="ajusteDb" placeholder="Ingrese la atenuación o ganancia en dB">
@@ -45,6 +49,7 @@
 
             <div id="transmision" class="tab-content">
                 <h2>Calculadora de Tiempo de Transmisión</h2>
+                <p>Utiliza esta calculadora para determinar el tiempo necesario para transmitir un mensaje de un tamaño específico a una velocidad determinada.</p>
                 <div class="input-group">
                     <label for="tamanoMensaje">Tamaño del mensaje:</label>
                     <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
@@ -71,6 +76,29 @@
                 <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo</button>
                 <div id="listaDatosTransmision" class="lista-datos"></div>
                 <div id="pasoAPasoTransmision" class="paso-a-paso"></div>
+            </div>
+
+            <div id="dbm" class="tab-content">
+                <h2>Calculadora de dBm/dB</h2>
+                <p>Utiliza esta calculadora para convertir entre dBm y mW, y para sumar o restar valores en dB.</p>
+                <div class="input-group">
+                    <label for="valorDbm1">Valor 1 (dBm):</label>
+                    <input type="number" id="valorDbm1" placeholder="Ingrese el valor en dBm">
+                </div>
+                <div class="input-group">
+                    <label for="valorDbm2">Valor 2 (dBm):</label>
+                    <input type="number" id="valorDbm2" placeholder="Ingrese el valor en dBm">
+                </div>
+                <div class="input-group">
+                    <label for="operacion">Operación:</label>
+                    <select id="operacion">
+                        <option value="sumar">Sumar</option>
+                        <option value="restar">Restar</option>
+                    </select>
+                </div>
+                <button class="btn-calculate" onclick="calcularDbm()">Calcular</button>
+                <div id="resultadoDbm" class="resultado-final"></div>
+                <div id="pasoAPasoDbm" class="paso-a-paso"></div>
             </div>
         </div>
     </div>
