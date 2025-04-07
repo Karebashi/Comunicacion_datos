@@ -1,81 +1,118 @@
-body {
-    background: linear-gradient(to right, #4facfe, #7fb3d5);
-    font-family: 'Arial', sans-serif;
-    text-align: center;
+/* Estilos generales */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
 }
 
 header {
-    background: #002f6c;
+    background-color: #28a745;
     color: white;
-    padding: 20px;
-    font-size: 24px;
-}
-
-.portada, .modulos {
-    background: white;
-    max-width: 800px; 
-    margin: 40px auto;
-    padding: 40px; 
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center; 
-}
-
-.portada {
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    flex-direction: column; /* Asegura que el contenido esté en columna */
+}
+
+
+h1, h2, h3 {
+    margin-bottom: 0px;
+}
+
+/* Portada */
+.portada {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .portada img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    max-width: 500px; /* Aumentar el tamaño de la imagen */
+    margin: 20px 0;
+    display: block; /* Asegura que la imagen sea un bloque centrado */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.portada .btn-ingresar {
-    background: #2874a6;
+.btn-ingresar {
+    background-color: #28a745;
     color: white;
     border: none;
-    padding: 20px 25px;
-    font-size: 20px; 
+    padding: 15px 30px;
+    font-size: 18px;
     cursor: pointer;
     border-radius: 5px;
     transition: 0.3s;
-    margin-top: 20px; 
+    display: inline-block;
+    margin-top: 20px; /* Espaciado entre la imagen y el botón */
+    text-align: center;
 }
 
-.portada .btn-ingresar:hover {
-    background: #979a9a;
+.btn-ingresar:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+/* Módulos y pestañas */
+.modulos {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .tab-container {
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
 }
 
 .tab-button {
-    background: #006d77;
-    color: white;
+    background-color: transparent;
     border: none;
-    padding: 15px 20px;
-    margin: 5px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    font-size: 18px;
+    position: relative;
     transition: 0.3s;
+    color: #555;
 }
 
-.tab-button:hover, .tab-button.active {
-    background: #83c5be;
+.tab-button:hover {
+    background-color: #f4f4f4;
+}
+
+.tab-button.active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #28a745;
 }
 
 .tab-content-container {
-    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
 
 .tab-content {
@@ -83,6 +120,7 @@ header {
     padding: 20px;
 }
 
+/* Estilos para formularios e inputs */
 .input-group {
     margin: 15px 0;
 }
@@ -94,28 +132,30 @@ header {
 }
 
 .input-group input, .input-group select {
-    width: 100%; /* Asegura que todos los inputs y selects ocupen el mismo ancho */
-    padding: 10px; /* Espaciado interno uniforme */
-    border: 1px solid #ccc; /* Borde uniforme */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 16px; /* Tamaño de fuente uniforme */
-    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
-    margin-bottom: 15px; /* Espaciado entre los elementos */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
-.btn-calculate, .btn-reset, .btn-select {
+/* Botones */
+.btn-calculate, .btn-reset {
     background: #28a745;
     color: white;
     border: none;
-    padding: 15px 20px; 
-    font-size: 18px;
+    padding: 12px 20px;
+    font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
     transition: 0.3s;
+    margin-right: 10px;
     margin-top: 10px;
 }
 
-.btn-calculate:hover, .btn-reset:hover, .btn-select:hover {
+.btn-calculate:hover, .btn-reset:hover {
     background: #218838;
 }
 
@@ -128,79 +168,40 @@ header {
     cursor: pointer;
     border-radius: 5px;
     transition: 0.3s;
-    margin: 5px; 
+    margin: 5px;
 }
 
 .btn-select:hover {
     background: #218838;
 }
 
-.input-group div {
-    margin-top: 10px;
-    margin-bottom: 10px; 
-}
-
-.linea-ajustes {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 0;
-    border-top: 2px solid #000;
-    border-bottom: 2px solid #000;
-}
-
-.bloque-ajuste {
-    width: 50px;
-    height: 50px;
-    margin: 0 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    border-radius: 5px;
-}
-
-.resultado-final {
-    margin-top: 20px;
-    font-weight: bold;
-    font-size: 18px; 
-}
-
-.paso-a-paso {
-    margin-top: 20px;
-    font-size: 16px;
-    text-align: left;
-    background: #f9f9f9;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+/* Sección de arrastrar y soltar */
 .drag-container {
     display: flex;
     justify-content: center;
+    gap: 20px;
     margin: 20px 0;
 }
 
 .draggable {
-    width: 100px;
-    height: 100px;
-    margin: 0 20px;
+    width: 150px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-weight: bold;
     cursor: grab;
     border-radius: 5px;
-    user-select: none;
+    transition: transform 0.3s;
+    font-weight: bold;
+}
+
+.draggable:hover {
+    transform: scale(1.05);
 }
 
 .atenuacion {
     background-color: red;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
 
 .ganancia {
@@ -239,7 +240,15 @@ header {
     font-weight: bold;
     font-size: 14px;
     min-width: 60px;
-    text-align: center;
+}
+
+.linea-ajustes {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 10px 0;
+    flex-wrap: wrap;
 }
 
 .delete-button {
@@ -257,30 +266,40 @@ header {
     background-color: #ccc;
 }
 
-
-@media (max-width: 768px) {
-    .portada, .modulos {
-        width: 90%;
-    }
-    .bloque-ajuste {
-        width: 40px;
-        height: 40px;
-    }
+.resultado-final {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    text-align: center;
 }
 
+.paso-a-paso {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border-left: 4px solid #28a745;
+}
 
-/* Estilos para la calculadora */
+/* Calculadora */
 .calculadora-container {
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 20px; /* Espaciado entre la calculadora y el historial */
-    margin-top: 20px;
+    justify-content: space-between;
+    max-width: 800px;
+    margin: 0 auto;
+    gap: 20px;
 }
 
 .calculadora {
-    flex: 1; /* Permite que la calculadora ocupe espacio proporcional */
-    max-width: 300px; /* Ajusta el ancho máximo */
+    flex: 1;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    min-width: 300px;
 }
 
 .calculadora-display {
@@ -300,24 +319,28 @@ header {
 }
 
 .calculadora-pad {
-    padding: 15px;
+    padding: 10px;
 }
 
 .pad-row {
     display: flex;
     margin-bottom: 10px;
+    justify-content: space-between;
 }
 
 .pad-btn {
-    flex: 1;
+    width: 60px;
     height: 60px;
     margin: 0 5px;
     border: none;
     border-radius: 5px;
-    font-size: 24px;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.2s;
     background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pad-btn.numero {
@@ -333,14 +356,24 @@ header {
 .pad-btn.igual {
     background-color: #28a745;
     color: white;
-    grid-row: span 2;
-    height: 130px; /* Para que ocupe dos filas */
+    height: 130px;
+    position: relative;
+    top: -70px;
+}
+
+.pad-btn.zero {
+    width: 125px;
+    flex: 2;
 }
 
 .pad-btn.dbm {
     background-color: #007bff;
     color: white;
-    flex: 2;
+}
+
+.pad-btn.db {
+    background-color: #dc3545;
+    color: white;
 }
 
 .pad-btn:hover {
@@ -355,10 +388,20 @@ header {
     background-color: #0069d9;
 }
 
+.pad-btn.db:hover {
+    background-color: #c82333;
+}
+
+/* Historial */
 .historial {
-    flex: 1; /* Permite que el historial ocupe espacio proporcional */
-    max-width: 300px; /* Ajusta el ancho máximo */
-    height: auto; /* Ajusta la altura automáticamente */
+    flex: 1;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    min-width: 250px;
+    overflow-y: auto;
 }
 
 .historial h3 {
@@ -369,15 +412,49 @@ header {
 }
 
 .historial-lista {
-    max-height: 200px;
+    max-height: 350px;
     overflow-y: auto;
 }
 
 .historial-item {
     padding: 10px;
     border-bottom: 1px solid #eee;
+    font-size: 14px;
 }
 
 .historial-item:last-child {
     border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .calculadora-container {
+        flex-direction: column;
+    }
+    
+    .calculadora, .historial {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .pad-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+        margin: 2px;
+    }
+    
+    .pad-btn.zero {
+        width: 104px;
+    }
+    
+    .pad-btn.igual {
+        height: 106px;
+        top: -54px;
+    }
+    
+    .calculadora-display input {
+        height: 50px;
+        font-size: 28px;
+    }
 }

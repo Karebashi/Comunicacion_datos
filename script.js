@@ -1,3 +1,4 @@
+// Funciones de navegación e inicialización
 function mostrarModulos() {
     document.getElementById('portada').style.display = 'none';
     document.getElementById('modulos').style.display = 'block';
@@ -17,6 +18,7 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
+// Funciones de conversión general
 function mwDbm(mw) {
     return 10 * Math.log10(mw);
 }
@@ -25,6 +27,7 @@ function dbmMw(dbm) {
     return Math.pow(10, dbm / 10);
 }
 
+// ----- MÓDULO DE ATENUACIÓN Y GANANCIA -----
 let ajustes = [];
 
 // Funciones de arrastrar y soltar
@@ -115,9 +118,7 @@ function calcularSumaLogaritmica() {
     }
 
     const potenciasLineales = ajustes.map(ajuste => Math.pow(10, ajuste / 10));
-
     const sumaPotenciasLineales = potenciasLineales.reduce((total, potencia) => total + potencia, 0);
-
     const resultadoEnDb = 10 * Math.log10(sumaPotenciasLineales);
 
     const resultadoFinal = document.getElementById('resultadoFinal');
@@ -176,6 +177,31 @@ function reiniciarAjustes() {
     document.getElementById('pasoAPasoAtenuacion').innerHTML = '';
 }
 
+// ----- MÓDULO DE TIEMPO DE TRANSMISIÓN -----
+
+// Función para mostrar las unidades según la selección (bits o bytes)
+function mostrarUnidades(tipo) {
+    const unidadTamano = document.getElementById('unidadTamano');
+    unidadTamano.style.display = 'block'; // Muestra el selector de unidades
+    unidadTamano.innerHTML = ''; // Limpia las opciones previas
+
+    if (tipo === 'bits') {
+        unidadTamano.innerHTML = `
+            <option value="bits">bits</option>
+            <option value="kb">kilobits (kb)</option>
+            <option value="mb">megabits (mb)</option>
+            <option value="gb">gigabits (gb)</option>
+        `;
+    } else if (tipo === 'bytes') {
+        unidadTamano.innerHTML = `
+            <option value="bytes">bytes</option>
+            <option value="kB">kilobytes (kB)</option>
+            <option value="MB">megabytes (MB)</option>
+            <option value="GB">gigabytes (GB)</option>
+        `;
+    }
+}
+
 // Función para calcular el tiempo de transmisión
 function calcularTiempoTransmision() {
     const tamanoMensaje = parseFloat(document.getElementById("tamanoMensaje").value);
@@ -214,29 +240,6 @@ function calcularTiempoTransmision() {
 
     // Mostrar el paso a paso
     mostrarPasoAPasoTransmision(tamanoMensaje, unidadTamano, bitsMensaje, velocidadTransmision, unidadVelocidad, bitsPorSegundo, tiempo);
-}
-
-// Función para mostrar las unidades según la selección (bits o bytes)
-function mostrarUnidades(tipo) {
-    const unidadTamano = document.getElementById('unidadTamano');
-    unidadTamano.style.display = 'block'; // Muestra el selector de unidades
-    unidadTamano.innerHTML = ''; // Limpia las opciones previas
-
-    if (tipo === 'bits') {
-        unidadTamano.innerHTML = `
-            <option value="bits">bits</option>
-            <option value="kb">kilobits (kb)</option>
-            <option value="mb">megabits (mb)</option>
-            <option value="gb">gigabits (gb)</option>
-        `;
-    } else if (tipo === 'bytes') {
-        unidadTamano.innerHTML = `
-            <option value="bytes">bytes</option>
-            <option value="kB">kilobytes (kB)</option>
-            <option value="MB">megabytes (MB)</option>
-            <option value="GB">gigabytes (GB)</option>
-        `;
-    }
 }
 
 // Función para mostrar el paso a paso del cálculo
@@ -290,6 +293,8 @@ function mostrarPasoAPasoTransmision(tamanoMensaje, unidadTamano, bitsMensaje, v
     explicacionFinal.style.fontWeight = 'bold';
     pasoAPaso.appendChild(explicacionFinal);
 }
+
+// ----- MÓDULO DE CALCULADORA dBm/dB -----
 
 // Variables para la calculadora
 let displayValue = "0";
@@ -351,90 +356,55 @@ function agregarOperador(operador) {
     actualizarDisplay();
 }
 
-function mostrarExplicacion(texto) {
-    const explicacion = document.getElementById("explicacionOperaciones");
-    explicacion.innerHTML = `<p>${texto}</p>`;
-}
-
 function calcularResultado() {
     const valorActual = parseFloat(displayValue);
-
+    
     if (operacionActual && valorAnterior !== null) {
         let resultado;
-        let explicacion = "";
-        const pasos = [];
-
-        switch (operacionActual) {
-            case "+":
-                resultado = valorAnterior + valorActual;
-                explicacion = `Suma: ${valorAnterior} + ${valorActual} = ${resultado}`;
-                pasos.push(`1. Tomamos el primer valor: ${valorAnterior}`);
-                pasos.push(`2. Sumamos el segundo valor: ${valorActual}`);
-                pasos.push(`3. Resultado: ${resultado}`);
-                break;
-            case "-":
-                resultado = valorAnterior - valorActual;
-                explicacion = `Resta: ${valorAnterior} - ${valorActual} = ${resultado}`;
-                pasos.push(`1. Tomamos el primer valor: ${valorAnterior}`);
-                pasos.push(`2. Restamos el segundo valor: ${valorActual}`);
-                pasos.push(`3. Resultado: ${resultado}`);
-                break;
-            case "*":
-                resultado = valorAnterior * valorActual;
-                explicacion = `Multiplicación: ${valorAnterior} × ${valorActual} = ${resultado}`;
-                pasos.push(`1. Tomamos el primer valor: ${valorAnterior}`);
-                pasos.push(`2. Multiplicamos por el segundo valor: ${valorActual}`);
-                pasos.push(`3. Resultado: ${resultado}`);
-                break;
-            case "/":
-                if (valorActual !== 0) {
-                    resultado = valorAnterior / valorActual;
-                    explicacion = `División: ${valorAnterior} ÷ ${valorActual} = ${resultado}`;
-                    pasos.push(`1. Tomamos el primer valor: ${valorAnterior}`);
-                    pasos.push(`2. Dividimos entre el segundo valor: ${valorActual}`);
-                    pasos.push(`3. Resultado: ${resultado}`);
-                } else {
-                    explicacion = "Error: División entre cero no permitida.";
-                    pasos.push("Error: No se puede dividir entre cero.");
-                    resultado = valorAnterior; // Mantener el valor anterior
-                }
-                break;
-            default:
-                resultado = valorActual;
+        
+        // Si estamos trabajando con valores en dB (detectado por presencia de "dB" en el historial reciente)
+        const historialElement = document.getElementById("historialCalculos");
+        const operacionEnDb = historialElement && historialElement.firstChild && 
+                             historialElement.firstChild.textContent.includes("dB");
+        
+        if (operacionEnDb) {
+            // Para operaciones en dB
+            switch(operacionActual) {
+                case "+":
+                    // Suma directa para niveles de referencia (no potencias)
+                    resultado = valorAnterior + valorActual;
+                    break;
+                case "-":
+                    // Resta directa para niveles de referencia (no potencias)
+                    resultado = valorAnterior - valorActual;
+                    break;
+                case "*":
+                    // Para multiplicar en dB, se usa la suma logarítmica
+                    resultado = valorAnterior + (10 * Math.log10(valorActual));
+                    break;
+                case "/":
+                    // Para dividir en dB, se usa la resta logarítmica
+                    resultado = valorAnterior - (10 * Math.log10(valorActual));
+                    break;
+                default:
+                    resultado = valorActual;
+            }
+            
+            // Agregamos al historial con indicación de dB
+            agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado.toFixed(2)} dB`);
+        } else {
+            // Operaciones normales (no dB)
+            resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
+            // Agregamos al historial
+            agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado}`);
         }
-
+        
         displayValue = String(Number(resultado).toFixed(2));
         valorAnterior = null;
         operacionActual = "";
         esperandoSegundoOperando = false;
         actualizarDisplay();
-
-        // Mostrar explicación detallada
-        mostrarExplicacionDetallada(explicacion, pasos);
-
-        // Agregar al historial
-        agregarAlHistorial(explicacion);
     }
-}
-
-function mostrarExplicacionDetallada(explicacion, pasos) {
-    const explicacionContainer = document.getElementById("explicacionOperaciones");
-    explicacionContainer.innerHTML = ""; // Limpiar explicaciones previas
-
-    const titulo = document.createElement("h4");
-    titulo.textContent = "Explicación de la operación:";
-    explicacionContainer.appendChild(titulo);
-
-    pasos.forEach((paso, index) => {
-        const pasoElemento = document.createElement("p");
-        pasoElemento.textContent = `${index + 1}. ${paso}`;
-        explicacionContainer.appendChild(pasoElemento);
-    });
-
-    const resultadoFinal = document.createElement("p");
-    resultadoFinal.textContent = `Resultado final: ${explicacion}`;
-    resultadoFinal.style.fontWeight = "bold";
-    explicacionContainer.appendChild(resultadoFinal);
 }
 
 function realizarCalculo(num1, num2, operador) {
@@ -469,7 +439,6 @@ function convertirAdBm() {
     }
 }
 
-// Función para operar directamente en dB
 function operarEnDb() {
     const valorActual = parseFloat(displayValue);
     if (!isNaN(valorActual)) {
@@ -487,62 +456,67 @@ function operarEnDb() {
     }
 }
 
-// Función para mostrar información sobre operaciones en dB
-function mostrarInformacionDb(valorDb) {
-    const pasoAPaso = document.getElementById('pasoAPasoDbm');
-    pasoAPaso.innerHTML = '';
-
-    const explicacionInicial = document.createElement('p');
-    explicacionInicial.textContent = `Operando con valor en dB: ${valorDb} dB`;
-    pasoAPaso.appendChild(explicacionInicial);
-
-    const informacion = document.createElement('p');
-    informacion.textContent = `Los decibelios (dB) son una unidad logarítmica que expresa la relación entre dos valores.`;
-    pasoAPaso.appendChild(informacion);
-
-    const operacionesDbs = document.createElement('p');
-    operacionesDbs.textContent = `Recuerda que para sumar potencias en dB correctamente, debes usar suma logarítmica, no suma algebraica directa.`;
-    pasoAPaso.appendChild(operacionesDbs);
-    
-    const ejemploMultiplicacion = document.createElement('p');
-    ejemploMultiplicacion.textContent = `Ejemplo: Si añades 3 dB, doblas la potencia. Si añades 10 dB, multiplicas la potencia por 10.`;
-    ejemploMultiplicacion.style.marginLeft = '20px';
-    pasoAPaso.appendChild(ejemploMultiplicacion);
-    
-    const ejemploResta = document.createElement('p');
-    ejemploResta.textContent = `Ejemplo: Si restas 3 dB, reduces la potencia a la mitad. Si restas 10 dB, divides la potencia por 10.`;
-    ejemploResta.style.marginLeft = '20px';
-    pasoAPaso.appendChild(ejemploResta);
-}
-
 function agregarAlHistorial(texto) {
     const historial = document.getElementById("historialCalculos");
-    const item = document.createElement("div");
-    item.className = "historial-item";
-    item.textContent = texto;
-    historial.prepend(item);
-    
-    // Limitamos a 10 elementos en el historial
-    if (historial.children.length > 10) {
-        historial.removeChild(historial.lastChild);
+    if (historial) {
+        const item = document.createElement("div");
+        item.className = "historial-item";
+        item.textContent = texto;
+        historial.prepend(item);
+        
+        // Limitamos a 10 elementos en el historial
+        if (historial.children.length > 10) {
+            historial.removeChild(historial.lastChild);
+        }
     }
 }
 
 function mostrarPasoAPasoDbm(valorMw, resultadoDbm) {
     const pasoAPaso = document.getElementById('pasoAPasoDbm');
-    pasoAPaso.innerHTML = '';
+    if (pasoAPaso) {
+        pasoAPaso.innerHTML = '';
 
-    const explicacionInicial = document.createElement('p');
-    explicacionInicial.textContent = `Para convertir ${valorMw} mW a dBm, seguimos estos pasos:`;
-    pasoAPaso.appendChild(explicacionInicial);
+        const explicacionInicial = document.createElement('p');
+        explicacionInicial.textContent = `Para convertir ${valorMw} mW a dBm, seguimos estos pasos:`;
+        pasoAPaso.appendChild(explicacionInicial);
 
-    const formulaPaso = document.createElement('p');
-    formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW)`;
-    pasoAPaso.appendChild(formulaPaso);
+        const formulaPaso = document.createElement('p');
+        formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW)`;
+        pasoAPaso.appendChild(formulaPaso);
 
-    const calculoPaso = document.createElement('p');
-    calculoPaso.textContent = `2. dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm`;
-    pasoAPaso.appendChild(calculoPaso);
+        const calculoPaso = document.createElement('p');
+        calculoPaso.textContent = `2. dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm`;
+        pasoAPaso.appendChild(calculoPaso);
+    }
+}
+
+function mostrarInformacionDb(valorDb) {
+    const pasoAPaso = document.getElementById('pasoAPasoDbm');
+    if (pasoAPaso) {
+        pasoAPaso.innerHTML = '';
+
+        const explicacionInicial = document.createElement('p');
+        explicacionInicial.textContent = `Operando con valor en dB: ${valorDb} dB`;
+        pasoAPaso.appendChild(explicacionInicial);
+
+        const informacion = document.createElement('p');
+        informacion.textContent = `Los decibelios (dB) son una unidad logarítmica que expresa la relación entre dos valores.`;
+        pasoAPaso.appendChild(informacion);
+
+        const operacionesDbs = document.createElement('p');
+        operacionesDbs.textContent = `Recuerda que para sumar potencias en dB correctamente, debes usar suma logarítmica, no suma algebraica directa.`;
+        pasoAPaso.appendChild(operacionesDbs);
+        
+        const ejemploMultiplicacion = document.createElement('p');
+        ejemploMultiplicacion.textContent = `Ejemplo: Si añades 3 dB, doblas la potencia. Si añades 10 dB, multiplicas la potencia por 10.`;
+        ejemploMultiplicacion.style.marginLeft = '20px';
+        pasoAPaso.appendChild(ejemploMultiplicacion);
+        
+        const ejemploResta = document.createElement('p');
+        ejemploResta.textContent = `Ejemplo: Si restas 3 dB, reduces la potencia a la mitad. Si restas 10 dB, divides la potencia por 10.`;
+        ejemploResta.style.marginLeft = '20px';
+        pasoAPaso.appendChild(ejemploResta);
+    }
 }
 
 // Inicializar el display cuando se carga la página
