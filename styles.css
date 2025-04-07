@@ -13,7 +13,7 @@ body {
 }
 
 header {
-    background-color: #28a745;
+    background-color: #1E90FF; /* Cambiar el color del encabezado */
     color: white;
     text-align: center;
     padding: 20px 0;
@@ -46,7 +46,7 @@ h1, h2, h3 {
 }
 
 .btn-ingresar {
-    background-color: #28a745;
+    background-color: #1E90FF; /* Cambiar el color del botón */
     color: white;
     border: none;
     padding: 15px 30px;
@@ -60,7 +60,7 @@ h1, h2, h3 {
 }
 
 .btn-ingresar:hover {
-    background-color: #218838;
+    background-color: #187bcd; /* Cambiar el color al pasar el mouse */
     transform: scale(1.05);
 }
 
@@ -87,15 +87,23 @@ h1, h2, h3 {
     position: relative;
     transition: 0.3s;
     color: #555;
+    text-transform: uppercase; /* Make text uppercase */
+    font-weight: bold; /* Make text bold */
+    border-radius: 5px; /* Add rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 .tab-button:hover {
-    background-color: #f4f4f4;
+    background-color: #e0f0ff; /* Light blue background on hover */
+    color: #1E90FF; /* Blue text on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .tab-button.active {
-    color: #28a745;
+    color: #1E90FF; /* Cambiar el color del texto activo */
     font-weight: bold;
+    background-color: #f0f8ff; /* Light blue background for active tab */
+    border: 2px solid #1E90FF; /* Add border to active tab */
 }
 
 .tab-button.active::after {
@@ -105,7 +113,7 @@ h1, h2, h3 {
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #28a745;
+    background-color: #1E90FF; /* Cambiar el color de la línea activa */
 }
 
 .tab-content-container {
@@ -122,28 +130,42 @@ h1, h2, h3 {
 
 /* Estilos para formularios e inputs */
 .input-group {
-    margin: 15px 0;
+    margin: 20px 0; /* Maintain vertical spacing between sections */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .input-group label {
     font-weight: bold;
-    display: block;
     margin-bottom: 5px;
+    font-size: 16px; /* Slightly larger font for clarity */
 }
 
 .input-group input, .input-group select {
-    width: 100%;
+    width: 100%; /* Ensure inputs and dropdowns are the same width */
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
     box-sizing: border-box;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Add spacing below inputs */
+}
+
+.input-group div {
+    margin-bottom: 15px; /* Add spacing below the buttons */
+}
+
+.input-group-inline {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Add spacing between label and result */
 }
 
 /* Botones */
 .btn-calculate, .btn-reset {
-    background: #28a745;
+    background: #1E90FF; /* Cambiar el color de los botones */
     color: white;
     border: none;
     padding: 12px 20px;
@@ -153,10 +175,11 @@ h1, h2, h3 {
     transition: 0.3s;
     margin-right: 10px;
     margin-top: 10px;
+    margin-bottom: 20px; /* Add spacing below the buttons */
 }
 
 .btn-calculate:hover, .btn-reset:hover {
-    background: #218838;
+    background: #187bcd; /* Cambiar el color al pasar el mouse */
 }
 
 .btn-select {
@@ -239,7 +262,17 @@ h1, h2, h3 {
     border-radius: 5px;
     font-weight: bold;
     font-size: 14px;
-    min-width: 60px;
+    min-width: 80px; /* Adjusted for numbering */
+    position: relative; /* Ensure proper alignment */
+}
+
+.ajuste-item::before {
+    content: attr(data-index);
+    position: absolute;
+    left: -20px; /* Adjust spacing for numbering */
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
 }
 
 .linea-ajustes {
@@ -249,6 +282,26 @@ h1, h2, h3 {
     justify-content: flex-start;
     padding: 10px 0;
     flex-wrap: wrap;
+}
+
+.linea-ajustes {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    min-height: 50px;
+    background-color: #f9f9f9;
+}
+
+.ajuste-item {
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 60px;
 }
 
 .delete-button {
@@ -267,13 +320,16 @@ h1, h2, h3 {
 }
 
 .resultado-final {
-    margin-top: 20px;
-    font-size: 18px;
+    margin-top: 20px; /* Add spacing above the result */
+    font-size: 16px;
     font-weight: bold;
     padding: 10px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
+    background-color: #e6f7ff;
+    border: 2px solid #1E90FF;
+    border-radius: 10px;
     text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .paso-a-paso {
@@ -281,7 +337,14 @@ h1, h2, h3 {
     padding: 15px;
     background-color: #f9f9f9;
     border-radius: 5px;
-    border-left: 4px solid #28a745;
+    border-left: 4px solid #1E90FF; /* Cambiar el color del borde */
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.paso-a-paso p {
+    margin-bottom: 15px; /* Ensure consistent spacing between steps */
+    line-height: 1.6; /* Improve readability */
 }
 
 /* Calculadora */
@@ -424,6 +487,35 @@ h1, h2, h3 {
 
 .historial-item:last-child {
     border-bottom: none;
+}
+
+/* Tooltip for units */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the element */
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Responsive */

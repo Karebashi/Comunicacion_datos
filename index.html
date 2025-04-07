@@ -30,22 +30,16 @@
             <!-- Pestaña de Atenuación y Ganancia -->
             <div id="atenuacion" class="tab-content">
                 <h2>Calculadora de Atenuación y Ganancia</h2>
-                <p>Utiliza esta calculadora para calcular la potencia final arrastrando atenuaciones o ganancias.</p>
+                <p>Arrastra las figuras de atenuación o ganancia a la línea y digita el valor para crear una cola.</p>
                 <div class="drag-container">
-                    <div id="atenuacionFigura" class="draggable atenuacion" draggable="true">Atenuación</div>
-                    <div id="gananciaFigura" class="draggable ganancia" draggable="true">Ganancia</div>
+                    <div class="draggable atenuacion" draggable="true" ondragstart="dragStart(event)">Atenuación</div>
+                    <div class="draggable ganancia" draggable="true" ondragstart="dragStart(event)">Ganancia</div>
                 </div>
-                <div id="dropZone" class="drop-zone">
+                <div id="lineaAjustes" class="linea-ajustes drop-zone">
                     <p>Arrastra aquí</p>
                 </div>
-                <div id="inputContainer" class="input-container" style="display: none;">
-                    <label for="ajusteValor">Ingrese el valor (dB):</label>
-                    <input type="number" id="ajusteValor" placeholder="Ingrese el valor">
-                    <button class="btn-calculate" onclick="agregarAjusteDesdeDrag()">Agregar Ajuste</button>
-                </div>
-                <div id="lineaAjustes" class="linea-ajustes"></div>
-                <button class="btn-calculate" onclick="calcularSumaLogaritmica()">Calcular Potencia Final</button>
-                <button class="btn-reset" onclick="reiniciarAjustes()">Reiniciar</button>
+                <button class="btn-calculate" onclick="calcularCola()">Calcular Resultado</button>
+                <button class="btn-reset" onclick="reiniciarCola()">Reiniciar</button>
                 <div id="resultadoFinal" class="resultado-final"></div>
                 <div id="pasoAPasoAtenuacion" class="paso-a-paso"></div>
             </div>
@@ -61,11 +55,13 @@
                         <button class="btn-select" onclick="mostrarUnidades('bytes')">Bytes</button>
                     </div>
                     <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
+                    <label for="unidadTamano">Unidad:</label>
                     <select id="unidadTamano" style="display:none;"></select>
                 </div>
                 <div class="input-group">
                     <label for="velocidadTransmision">Velocidad de transmisión:</label>
                     <input type="number" id="velocidadTransmision" placeholder="Ingrese la velocidad">
+                    <label for="unidadVelocidad">Unidad:</label>
                     <select id="unidadVelocidad">
                         <option value="bps">bps</option>
                         <option value="kbps">kbps</option>
@@ -73,9 +69,9 @@
                         <option value="gbps">gbps</option>
                     </select>
                 </div>
-                <div class="input-group">
-                    <label for="tiempoTransmision">Tiempo de transmisión (s):</label>
-                    <input type="number" id="tiempoTransmision" readonly>
+                <div class="input-group-inline">
+                    <label for="tiempoTransmision">Tiempo de transmisión:</label>
+                    <div class="resultado-final" id="tiempoTransmision">0.0000 segundos</div>
                 </div>
                 <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo</button>
                 <div id="listaDatosTransmision" class="lista-datos"></div>

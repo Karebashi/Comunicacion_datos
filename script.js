@@ -1,7 +1,7 @@
-// Funciones de navegación e inicialización
 function mostrarModulos() {
     document.getElementById('portada').style.display = 'none';
     document.getElementById('modulos').style.display = 'block';
+    openTab({ currentTarget: document.querySelector('.tab-button:nth-child(1)') }, 'atenuacion'); // Open Atenuación y Ganancia
 }
 
 function openTab(evt, tabName) {
@@ -18,7 +18,6 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-// Funciones de conversión general
 function mwDbm(mw) {
     return 10 * Math.log10(mw);
 }
@@ -27,7 +26,6 @@ function dbmMw(dbm) {
     return Math.pow(10, dbm / 10);
 }
 
-// ----- MÓDULO DE ATENUACIÓN Y GANANCIA -----
 let ajustes = [];
 
 // Funciones de arrastrar y soltar
@@ -46,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 let draggedElement = null;
 
 function dragStart(event) {
-    draggedElement = event.target;
+    event.dataTransfer.setData("type", event.target.className.includes('atenuacion') ? 'atenuacion' : 'ganancia');
 }
 
 function dragOver(event) {
@@ -90,7 +88,7 @@ function mostrarAjustes() {
     ajustes.forEach((ajuste, index) => {
         const ajusteDiv = document.createElement('div');
         ajusteDiv.className = 'ajuste-item';
-        ajusteDiv.textContent = `${ajuste > 0 ? '+' : ''}${ajuste} dB`;
+        ajusteDiv.textContent = `${index + 1}. ${ajuste > 0 ? '+' : ''}${ajuste} dB`; // Add sequential number
         ajusteDiv.dataset.index = index;
 
         ajusteDiv.style.backgroundColor = ajuste > 0 ? 'green' : 'red';
@@ -118,7 +116,9 @@ function calcularSumaLogaritmica() {
     }
 
     const potenciasLineales = ajustes.map(ajuste => Math.pow(10, ajuste / 10));
+
     const sumaPotenciasLineales = potenciasLineales.reduce((total, potencia) => total + potencia, 0);
+
     const resultadoEnDb = 10 * Math.log10(sumaPotenciasLineales);
 
     const resultadoFinal = document.getElementById('resultadoFinal');
@@ -177,31 +177,6 @@ function reiniciarAjustes() {
     document.getElementById('pasoAPasoAtenuacion').innerHTML = '';
 }
 
-// ----- MÓDULO DE TIEMPO DE TRANSMISIÓN -----
-
-// Función para mostrar las unidades según la selección (bits o bytes)
-function mostrarUnidades(tipo) {
-    const unidadTamano = document.getElementById('unidadTamano');
-    unidadTamano.style.display = 'block'; // Muestra el selector de unidades
-    unidadTamano.innerHTML = ''; // Limpia las opciones previas
-
-    if (tipo === 'bits') {
-        unidadTamano.innerHTML = `
-            <option value="bits">bits</option>
-            <option value="kb">kilobits (kb)</option>
-            <option value="mb">megabits (mb)</option>
-            <option value="gb">gigabits (gb)</option>
-        `;
-    } else if (tipo === 'bytes') {
-        unidadTamano.innerHTML = `
-            <option value="bytes">bytes</option>
-            <option value="kB">kilobytes (kB)</option>
-            <option value="MB">megabytes (MB)</option>
-            <option value="GB">gigabytes (GB)</option>
-        `;
-    }
-}
-
 // Función para calcular el tiempo de transmisión
 function calcularTiempoTransmision() {
     const tamanoMensaje = parseFloat(document.getElementById("tamanoMensaje").value);
@@ -236,65 +211,98 @@ function calcularTiempoTransmision() {
     const tiempo = bitsMensaje / bitsPorSegundo;
 
     // Mostrar el resultado
-    document.getElementById("tiempoTransmision").value = tiempo.toFixed(4);
+    document.getElementById("tiempoTransmision").textContent = `${tiempo.toFixed(4)} segundos`; // Update styled div
 
     // Mostrar el paso a paso
     mostrarPasoAPasoTransmision(tamanoMensaje, unidadTamano, bitsMensaje, velocidadTransmision, unidadVelocidad, bitsPorSegundo, tiempo);
+
+    // Desplazar la página al procedimiento
+    document.getElementById("pasoAPasoTransmision").scrollIntoView({ behavior: "smooth" });
+}
+
+// Función para mostrar las unidades según la selección (bits o bytes)
+function mostrarUnidades(tipo) {
+    const unidadTamano = document.getElementById('unidadTamano');
+    unidadTamano.style.display = 'block'; // Muestra el selector de unidades
+    unidadTamano.innerHTML = ''; // Limpia las opciones previas
+
+    if (tipo === 'bits') {
+        unidadTamano.innerHTML = `
+            <option value="bits">bits</option>
+            <option value="kb">kilobits (kb)</option>
+            <option value="mb">megabits (mb)</option>
+            <option value="gb">gigabits (gb)</option>
+        `;
+    } else if (tipo === 'bytes') {
+        unidadTamano.innerHTML = `
+            <option value="bytes">bytes</option>
+            <option value="kB">kilobytes (kB)</option>
+            <option value="MB">megabytes (MB)</option>
+            <option value="GB">gigabytes (GB)</option>
+        `;
+    }
 }
 
 // Función para mostrar el paso a paso del cálculo
 function mostrarPasoAPasoTransmision(tamanoMensaje, unidadTamano, bitsMensaje, velocidadTransmision, unidadVelocidad, bitsPorSegundo, tiempo) {
     const pasoAPaso = document.getElementById('pasoAPasoTransmision');
-    pasoAPaso.innerHTML = ''; // Limpia los pasos previos
+    pasoAPaso.innerHTML = ''; // Clear previous steps
 
     // Explicación inicial
     const explicacionInicial = document.createElement('p');
-    explicacionInicial.textContent = `Para calcular el tiempo de transmisión, seguimos estos pasos:`;
+    explicacionInicial.textContent = `Para calcular el tiempo de transmisión, seguimos un enfoque paso a paso para entender cómo se relacionan el tamaño del mensaje y la velocidad de transmisión.`;
+    explicacionInicial.style.marginBottom = '15px';
     pasoAPaso.appendChild(explicacionInicial);
 
     // Paso 1: Conversión del tamaño del mensaje a bits
     const paso1 = document.createElement('p');
-    paso1.textContent = `1. Convertimos el tamaño del mensaje a bits:`;
+    paso1.textContent = `1. Convertimos el tamaño del mensaje a bits. Esto es importante porque la velocidad de transmisión generalmente se mide en bits por segundo (bps).`;
+    paso1.style.marginBottom = '10px';
     pasoAPaso.appendChild(paso1);
 
     const detallePaso1 = document.createElement('p');
-    detallePaso1.textContent = `   - Tamaño del mensaje: ${tamanoMensaje} ${unidadTamano} = ${bitsMensaje} bits`;
+    detallePaso1.textContent = `   - Tamaño del mensaje: ${tamanoMensaje} ${unidadTamano} = ${bitsMensaje} bits.`;
     detallePaso1.style.marginLeft = '20px';
+    detallePaso1.style.marginBottom = '15px';
     pasoAPaso.appendChild(detallePaso1);
 
     // Paso 2: Conversión de la velocidad de transmisión a bits por segundo
     const paso2 = document.createElement('p');
-    paso2.textContent = `2. Convertimos la velocidad de transmisión a bits por segundo:`;
+    paso2.textContent = `2. Convertimos la velocidad de transmisión a bits por segundo (bps). Esto asegura que ambas magnitudes estén en las mismas unidades.`;
+    paso2.style.marginBottom = '10px';
     pasoAPaso.appendChild(paso2);
 
     const detallePaso2 = document.createElement('p');
-    detallePaso2.textContent = `   - Velocidad de transmisión: ${velocidadTransmision} ${unidadVelocidad} = ${bitsPorSegundo} bps`;
+    detallePaso2.textContent = `   - Velocidad de transmisión: ${velocidadTransmision} ${unidadVelocidad} = ${bitsPorSegundo} bps.`;
     detallePaso2.style.marginLeft = '20px';
+    detallePaso2.style.marginBottom = '15px';
     pasoAPaso.appendChild(detallePaso2);
 
     // Paso 3: Cálculo del tiempo de transmisión
     const paso3 = document.createElement('p');
-    paso3.textContent = `3. Calculamos el tiempo de transmisión usando la fórmula:`;
+    paso3.textContent = `3. Calculamos el tiempo de transmisión dividiendo el tamaño del mensaje en bits entre la velocidad de transmisión en bps.`;
+    paso3.style.marginBottom = '10px';
     pasoAPaso.appendChild(paso3);
 
     const detallePaso3 = document.createElement('p');
-    detallePaso3.textContent = `   - Tiempo de transmisión = Tamaño del mensaje (bits) / Velocidad de transmisión (bps)`;
+    detallePaso3.textContent = `   - Tiempo de transmisión = Tamaño del mensaje (bits) / Velocidad de transmisión (bps).`;
     detallePaso3.style.marginLeft = '20px';
+    detallePaso3.style.marginBottom = '10px';
     pasoAPaso.appendChild(detallePaso3);
 
     const resultadoPaso3 = document.createElement('p');
-    resultadoPaso3.textContent = `   - Tiempo de transmisión = ${bitsMensaje} / ${bitsPorSegundo} = ${tiempo.toFixed(4)} segundos`;
+    resultadoPaso3.textContent = `   - Tiempo de transmisión = ${bitsMensaje} / ${bitsPorSegundo} = ${tiempo.toFixed(4)} segundos.`;
     resultadoPaso3.style.marginLeft = '20px';
+    resultadoPaso3.style.marginBottom = '15px';
     pasoAPaso.appendChild(resultadoPaso3);
 
     // Explicación final
     const explicacionFinal = document.createElement('p');
-    explicacionFinal.textContent = `Este es el tiempo necesario para transmitir el mensaje con los valores proporcionados.`;
+    explicacionFinal.textContent = `Este resultado nos indica cuánto tiempo tardará en transmitirse el mensaje completo a la velocidad especificada.`;
     explicacionFinal.style.fontWeight = 'bold';
+    explicacionFinal.style.marginTop = '15px';
     pasoAPaso.appendChild(explicacionFinal);
 }
-
-// ----- MÓDULO DE CALCULADORA dBm/dB -----
 
 // Variables para la calculadora
 let displayValue = "0";
@@ -360,46 +368,12 @@ function calcularResultado() {
     const valorActual = parseFloat(displayValue);
     
     if (operacionActual && valorAnterior !== null) {
-        let resultado;
+        const resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
         
-        // Si estamos trabajando con valores en dB (detectado por presencia de "dB" en el historial reciente)
-        const historialElement = document.getElementById("historialCalculos");
-        const operacionEnDb = historialElement && historialElement.firstChild && 
-                             historialElement.firstChild.textContent.includes("dB");
+        // Agregamos al historial
+        agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado}`);
         
-        if (operacionEnDb) {
-            // Para operaciones en dB
-            switch(operacionActual) {
-                case "+":
-                    // Suma directa para niveles de referencia (no potencias)
-                    resultado = valorAnterior + valorActual;
-                    break;
-                case "-":
-                    // Resta directa para niveles de referencia (no potencias)
-                    resultado = valorAnterior - valorActual;
-                    break;
-                case "*":
-                    // Para multiplicar en dB, se usa la suma logarítmica
-                    resultado = valorAnterior + (10 * Math.log10(valorActual));
-                    break;
-                case "/":
-                    // Para dividir en dB, se usa la resta logarítmica
-                    resultado = valorAnterior - (10 * Math.log10(valorActual));
-                    break;
-                default:
-                    resultado = valorActual;
-            }
-            
-            // Agregamos al historial con indicación de dB
-            agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado.toFixed(2)} dB`);
-        } else {
-            // Operaciones normales (no dB)
-            resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
-            // Agregamos al historial
-            agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado}`);
-        }
-        
-        displayValue = String(Number(resultado).toFixed(2));
+        displayValue = String(resultado);
         valorAnterior = null;
         operacionActual = "";
         esperandoSegundoOperando = false;
@@ -439,84 +413,34 @@ function convertirAdBm() {
     }
 }
 
-function operarEnDb() {
-    const valorActual = parseFloat(displayValue);
-    if (!isNaN(valorActual)) {
-        // No se requiere conversión ya que estamos trabajando directamente con dB
-        
-        // Agregamos al historial
-        agregarAlHistorial(`Valor actual: ${valorActual} dB`);
-        
-        // Mantenemos el valor tal cual, solo aseguramos que tenga 2 decimales para consistencia
-        displayValue = valorActual.toFixed(2);
-        actualizarDisplay();
-        
-        // Mostrar información sobre operaciones en dB
-        mostrarInformacionDb(valorActual);
-    }
-}
-
 function agregarAlHistorial(texto) {
     const historial = document.getElementById("historialCalculos");
-    if (historial) {
-        const item = document.createElement("div");
-        item.className = "historial-item";
-        item.textContent = texto;
-        historial.prepend(item);
-        
-        // Limitamos a 10 elementos en el historial
-        if (historial.children.length > 10) {
-            historial.removeChild(historial.lastChild);
-        }
+    const item = document.createElement("div");
+    item.className = "historial-item";
+    item.textContent = texto;
+    historial.prepend(item);
+    
+    // Limitamos a 10 elementos en el historial
+    if (historial.children.length > 10) {
+        historial.removeChild(historial.lastChild);
     }
 }
 
 function mostrarPasoAPasoDbm(valorMw, resultadoDbm) {
     const pasoAPaso = document.getElementById('pasoAPasoDbm');
-    if (pasoAPaso) {
-        pasoAPaso.innerHTML = '';
+    pasoAPaso.innerHTML = '';
 
-        const explicacionInicial = document.createElement('p');
-        explicacionInicial.textContent = `Para convertir ${valorMw} mW a dBm, seguimos estos pasos:`;
-        pasoAPaso.appendChild(explicacionInicial);
+    const explicacionInicial = document.createElement('p');
+    explicacionInicial.textContent = `Para convertir ${valorMw} mW a dBm, seguimos estos pasos:`;
+    pasoAPaso.appendChild(explicacionInicial);
 
-        const formulaPaso = document.createElement('p');
-        formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW)`;
-        pasoAPaso.appendChild(formulaPaso);
+    const formulaPaso = document.createElement('p');
+    formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW)`;
+    pasoAPaso.appendChild(formulaPaso);
 
-        const calculoPaso = document.createElement('p');
-        calculoPaso.textContent = `2. dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm`;
-        pasoAPaso.appendChild(calculoPaso);
-    }
-}
-
-function mostrarInformacionDb(valorDb) {
-    const pasoAPaso = document.getElementById('pasoAPasoDbm');
-    if (pasoAPaso) {
-        pasoAPaso.innerHTML = '';
-
-        const explicacionInicial = document.createElement('p');
-        explicacionInicial.textContent = `Operando con valor en dB: ${valorDb} dB`;
-        pasoAPaso.appendChild(explicacionInicial);
-
-        const informacion = document.createElement('p');
-        informacion.textContent = `Los decibelios (dB) son una unidad logarítmica que expresa la relación entre dos valores.`;
-        pasoAPaso.appendChild(informacion);
-
-        const operacionesDbs = document.createElement('p');
-        operacionesDbs.textContent = `Recuerda que para sumar potencias en dB correctamente, debes usar suma logarítmica, no suma algebraica directa.`;
-        pasoAPaso.appendChild(operacionesDbs);
-        
-        const ejemploMultiplicacion = document.createElement('p');
-        ejemploMultiplicacion.textContent = `Ejemplo: Si añades 3 dB, doblas la potencia. Si añades 10 dB, multiplicas la potencia por 10.`;
-        ejemploMultiplicacion.style.marginLeft = '20px';
-        pasoAPaso.appendChild(ejemploMultiplicacion);
-        
-        const ejemploResta = document.createElement('p');
-        ejemploResta.textContent = `Ejemplo: Si restas 3 dB, reduces la potencia a la mitad. Si restas 10 dB, divides la potencia por 10.`;
-        ejemploResta.style.marginLeft = '20px';
-        pasoAPaso.appendChild(ejemploResta);
-    }
+    const calculoPaso = document.createElement('p');
+    calculoPaso.textContent = `2. dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm`;
+    pasoAPaso.appendChild(calculoPaso);
 }
 
 // Inicializar el display cuando se carga la página
@@ -525,4 +449,99 @@ document.addEventListener('DOMContentLoaded', function() {
     if (displayElement) {
         displayElement.value = displayValue;
     }
+});
+
+let queue = [];
+
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function dropOnLine(event) {
+    event.preventDefault();
+    const type = event.dataTransfer.getData("type");
+    const value = parseFloat(prompt(`Ingrese el valor de la ${type === 'atenuacion' ? 'atenuación' : 'ganancia'} en dB:`));
+
+    if (!isNaN(value)) {
+        const adjustedValue = type === 'atenuacion' ? -Math.abs(value) : Math.abs(value);
+        queue.push({ type, value: adjustedValue });
+        addToLine(type, adjustedValue);
+    } else {
+        alert("Por favor, ingrese un valor válido.");
+    }
+}
+
+function addToLine(type, value) {
+    const line = document.getElementById("lineaAjustes");
+    const div = document.createElement("div");
+    div.className = `ajuste-item ${type}`;
+    div.textContent = `${value} dB`;
+    div.style.backgroundColor = type === 'atenuacion' ? 'red' : 'green';
+    div.style.color = 'white';
+
+    line.appendChild(div);
+}
+
+function calcularCola() {
+    if (queue.length === 0) {
+        alert("No hay elementos en la cola para calcular.");
+        return;
+    }
+
+    const totalDb = queue.reduce((sum, item) => sum + item.value, 0);
+    document.getElementById("resultadoFinal").textContent = `Resultado Total: ${totalDb.toFixed(2)} dB`;
+
+    mostrarPasoAPaso(queue, totalDb);
+
+    // Desplazar la página al procedimiento
+    document.getElementById("pasoAPasoAtenuacion").scrollIntoView({ behavior: "smooth" });
+}
+
+function mostrarPasoAPaso(queue, totalDb) {
+    const pasoAPaso = document.getElementById("pasoAPasoAtenuacion");
+    pasoAPaso.innerHTML = ""; // Clear previous steps
+
+    const explicacionInicial = document.createElement("p");
+    explicacionInicial.textContent = "Procedimiento detallado para calcular el resultado total:";
+    pasoAPaso.appendChild(explicacionInicial);
+
+    queue.forEach((item, index) => {
+        const paso = document.createElement("p");
+        paso.textContent = `Paso ${index + 1}: Se agregó una ${item.type === 'atenuacion' ? 'atenuación' : 'ganancia'} de ${Math.abs(item.value)} dB.`;
+        paso.style.marginLeft = "20px";
+        pasoAPaso.appendChild(paso);
+
+        const razonamiento = document.createElement("p");
+        razonamiento.textContent = item.type === 'atenuacion'
+            ? "La atenuación reduce la potencia de la señal, por lo que se resta este valor al total."
+            : "La ganancia aumenta la potencia de la señal, por lo que se suma este valor al total.";
+        razonamiento.style.marginLeft = "40px";
+        razonamiento.style.fontStyle = "italic";
+        pasoAPaso.appendChild(razonamiento);
+    });
+
+    const resultadoPaso = document.createElement("p");
+    resultadoPaso.textContent = `Resultado final: La suma total de las atenuaciones y ganancias es ${totalDb.toFixed(2)} dB.`;
+    resultadoPaso.style.fontWeight = "bold";
+    resultadoPaso.style.marginTop = "10px";
+    pasoAPaso.appendChild(resultadoPaso);
+
+    const conclusion = document.createElement("p");
+    conclusion.textContent = "Este resultado representa el nivel de potencia final después de aplicar todas las atenuaciones y ganancias.";
+    conclusion.style.marginTop = "10px";
+    conclusion.style.fontStyle = "italic";
+    pasoAPaso.appendChild(conclusion);
+}
+
+function reiniciarCola() {
+    queue = [];
+    document.getElementById("lineaAjustes").innerHTML = "";
+    document.getElementById("resultadoFinal").textContent = "";
+    document.getElementById("pasoAPasoAtenuacion").innerHTML = ""; // Clear step-by-step explanation
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById("lineaAjustes");
+    dropZone.addEventListener("dragover", allowDrop);
+    dropZone.addEventListener("drop", dropOnLine);
 });
