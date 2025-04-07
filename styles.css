@@ -94,11 +94,13 @@ header {
 }
 
 .input-group input, .input-group select {
-    width: 100%;
-    padding: 15px; 
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px; 
+    width: 100%; /* Asegura que todos los inputs y selects ocupen el mismo ancho */
+    padding: 10px; /* Espaciado interno uniforme */
+    border: 1px solid #ccc; /* Borde uniforme */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente uniforme */
+    box-sizing: border-box; /* Incluye el padding y el borde en el ancho total */
+    margin-bottom: 15px; /* Espaciado entre los elementos */
 }
 
 .btn-calculate, .btn-reset, .btn-select {
@@ -115,6 +117,27 @@ header {
 
 .btn-calculate:hover, .btn-reset:hover, .btn-select:hover {
     background: #218838;
+}
+
+.btn-select {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin: 5px; 
+}
+
+.btn-select:hover {
+    background: #218838;
+}
+
+.input-group div {
+    margin-top: 10px;
+    margin-bottom: 10px; 
 }
 
 .linea-ajustes {
@@ -155,6 +178,86 @@ header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.drag-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.draggable {
+    width: 100px;
+    height: 100px;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    cursor: grab;
+    border-radius: 5px;
+    user-select: none;
+}
+
+.atenuacion {
+    background-color: red;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.ganancia {
+    background-color: green;
+}
+
+.drop-zone {
+    width: 100%;
+    height: 150px;
+    border: 2px dashed #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.drop-zone p {
+    font-size: 18px;
+    color: #555;
+}
+
+.input-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.ajuste-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.delete-button {
+    margin-left: 10px;
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 2px 5px;
+}
+
+.delete-button:hover {
+    background-color: #ccc;
+}
+
+
 @media (max-width: 768px) {
     .portada, .modulos {
         width: 90%;
@@ -163,4 +266,118 @@ header {
         width: 40px;
         height: 40px;
     }
+}
+
+
+/* Estilos para la calculadora */
+.calculadora-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px; /* Espaciado entre la calculadora y el historial */
+    margin-top: 20px;
+}
+
+.calculadora {
+    flex: 1; /* Permite que la calculadora ocupe espacio proporcional */
+    max-width: 300px; /* Ajusta el ancho máximo */
+}
+
+.calculadora-display {
+    background-color: #333;
+    padding: 20px;
+}
+
+.calculadora-display input {
+    width: 100%;
+    height: 60px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 36px;
+    text-align: right;
+    outline: none;
+}
+
+.calculadora-pad {
+    padding: 15px;
+}
+
+.pad-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.pad-btn {
+    flex: 1;
+    height: 60px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #fff;
+}
+
+.pad-btn.numero {
+    background-color: #f9f9f9;
+}
+
+.pad-btn.operador {
+    background-color: #f0f0f0;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.pad-btn.igual {
+    background-color: #28a745;
+    color: white;
+    grid-row: span 2;
+    height: 130px; /* Para que ocupe dos filas */
+}
+
+.pad-btn.dbm {
+    background-color: #007bff;
+    color: white;
+    flex: 2;
+}
+
+.pad-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.pad-btn.igual:hover {
+    background-color: #218838;
+}
+
+.pad-btn.dbm:hover {
+    background-color: #0069d9;
+}
+
+.historial {
+    flex: 1; /* Permite que el historial ocupe espacio proporcional */
+    max-width: 300px; /* Ajusta el ancho máximo */
+    height: auto; /* Ajusta la altura automáticamente */
+}
+
+.historial h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.historial-lista {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.historial-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.historial-item:last-child {
+    border-bottom: none;
 }

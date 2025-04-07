@@ -28,20 +28,21 @@
         <div class="tab-content-container">
             <div id="atenuacion" class="tab-content">
                 <h2>Calculadora de Atenuación y Ganancia</h2>
-                <p>Utiliza esta calculadora para determinar la potencia final después de aplicar ajustes de atenuación o ganancia.</p>
-                <div class="input-group">
-                    <label for="potenciaEntrada">Potencia de entrada (mW):</label>
-                    <input type="number" id="potenciaEntrada" placeholder="Ingrese la potencia en mW">
+                <p>Arrastra las figuras al rectangulo para agregar ajustes de atenuación o ganancia.</p>
+                <div class="drag-container">
+                    <div id="atenuacionFigura" class="draggable atenuacion" draggable="true">Atenuación</div>
+                    <div id="gananciaFigura" class="draggable ganancia" draggable="true">Ganancia</div>
                 </div>
-                <p>Sigue agregando la cantidad deseada de ajustes, valores positivos equivalen a ganacias y negativos a atenuación</p>
-
-                <div class="input-group">
-                    <label for="ajusteDb">Ajuste (dB):</label>
-                    <input type="number" id="ajusteDb" placeholder="Ingrese la atenuación o ganancia en dB">
+                <div id="dropZone" class="drop-zone">
+                    <p>Arrastra aquí</p>
                 </div>
-                <button class="btn-calculate" onclick="agregarAjuste()">Agregar Ajuste</button>
+                <div id="inputContainer" class="input-container" style="display: none;">
+                    <label for="ajusteValor">Ingrese el valor (dB):</label>
+                    <input type="number" id="ajusteValor" placeholder="Ingrese el valor">
+                    <button class="btn-calculate" onclick="agregarAjusteDesdeDrag()">Agregar Ajuste</button>
+                </div>
                 <div id="lineaAjustes" class="linea-ajustes"></div>
-                <button class="btn-calculate" onclick="calcularPotenciaFinal()">Calcular Potencia Final</button>
+                <button class="btn-calculate" onclick="calcularSumaLogaritmica()">Calcular Potencia Final</button>
                 <button class="btn-reset" onclick="reiniciarAjustes()">Reiniciar</button>
                 <div id="resultadoFinal" class="resultado-final"></div>
                 <div id="pasoAPasoAtenuacion" class="paso-a-paso"></div>
@@ -52,11 +53,11 @@
                 <p>Utiliza esta calculadora para determinar el tiempo necesario para transmitir un mensaje de un tamaño específico a una velocidad determinada.</p>
                 <div class="input-group">
                     <label for="tamanoMensaje">Tamaño del mensaje:</label>
-                    <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
                     <div>
                         <button class="btn-select" onclick="mostrarUnidades('bits')">Bits</button>
                         <button class="btn-select" onclick="mostrarUnidades('bytes')">Bytes</button>
                     </div>
+                    <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
                     <select id="unidadTamano" style="display:none;"></select>
                 </div>
                 <div class="input-group">
@@ -80,26 +81,55 @@
 
             <div id="dbm" class="tab-content">
                 <h2>Calculadora de dBm/dB</h2>
-                <p>Utiliza esta calculadora para convertir entre dBm y mW, y para sumar o restar valores en dB.</p>
-                <div class="input-group">
-                    <label for="valorDbm1">Valor 1 (dBm):</label>
-                    <input type="number" id="valorDbm1" placeholder="Ingrese el valor en dBm">
+                <p>Utiliza esta calculadora para convertir entre valores, realizar sumas y restas.</p>
+                
+                <div class="calculadora-container">
+                    <!-- Calculadora -->
+                    <div class="calculadora">
+                        <div class="calculadora-display">
+                            <input type="text" id="display" readonly value="0">
+                        </div>
+                        <div class="calculadora-pad">
+                            <div class="pad-row">
+                                <button class="pad-btn" onclick="limpiarDisplay()">C</button>
+                                <button class="pad-btn" onclick="borrarUltimo()">←</button>
+                                <button class="pad-btn operador" onclick="agregarOperador('/')">/</button>
+                                <button class="pad-btn operador" onclick="agregarOperador('*')">×</button>
+                            </div>
+                            <div class="pad-row">
+                                <button class="pad-btn numero" onclick="agregarNumero('7')">7</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('8')">8</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('9')">9</button>
+                                <button class="pad-btn operador" onclick="agregarOperador('-')">−</button>
+                            </div>
+                            <div class="pad-row">
+                                <button class="pad-btn numero" onclick="agregarNumero('4')">4</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('5')">5</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('6')">6</button>
+                                <button class="pad-btn operador" onclick="agregarOperador('+')">+</button>
+                            </div>
+                            <div class="pad-row">
+                                <button class="pad-btn numero" onclick="agregarNumero('1')">1</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('2')">2</button>
+                                <button class="pad-btn numero" onclick="agregarNumero('3')">3</button>
+                                <button class="pad-btn igual" onclick="calcularResultado()">=</button>
+                            </div>
+                            <div class="pad-row">
+                                <button class="pad-btn numero zero" onclick="agregarNumero('0')">0</button>
+                                <button class="pad-btn" onclick="agregarDecimal()">.</button>
+                                <button class="pad-btn dbm" onclick="convertirAdBm()">dBm</button>
+                                <button class="pad-btn db" onclick="operarEnDb()">dB</button>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!-- Historial -->
+                    <div class="historial">
+                        <h3>Historial de cálculos</h3>
+                        <div id="historialCalculos" class="historial-lista"></div>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="valorDbm2">Valor 2 (dBm):</label>
-                    <input type="number" id="valorDbm2" placeholder="Ingrese el valor en dBm">
-                </div>
-                <div class="input-group">
-                    <label for="operacion">Operación:</label>
-                    <select id="operacion">
-                        <option value="sumar">Sumar</option>
-                        <option value="restar">Restar</option>
-                    </select>
-                </div>
-                <button class="btn-calculate" onclick="calcularDbm()">Calcular</button>
-                <div id="resultadoDbm" class="resultado-final"></div>
-                <div id="pasoAPasoDbm" class="paso-a-paso"></div>
-            </div>
+                <div id="explicacionOperaciones" class="paso-a-paso"></div>
         </div>
     </div>
 </body>
