@@ -90,36 +90,28 @@
                             <input type="text" id="display" readonly value="0">
                         </div>
                         <div class="calculadora-pad">
-                            <div class="pad-row">
-                                <button class="pad-btn" onclick="limpiarDisplay()">C</button>
-                                <button class="pad-btn" onclick="borrarUltimo()">←</button>
-                                <button class="pad-btn operador" onclick="agregarOperador('/')">/</button>
-                                <button class="pad-btn operador" onclick="agregarOperador('*')">×</button>
-                            </div>
-                            <div class="pad-row">
-                                <button class="pad-btn numero" onclick="agregarNumero('7')">7</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('8')">8</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('9')">9</button>
-                                <button class="pad-btn operador" onclick="agregarOperador('-')">−</button>
-                            </div>
-                            <div class="pad-row">
-                                <button class="pad-btn numero" onclick="agregarNumero('4')">4</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('5')">5</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('6')">6</button>
-                                <button class="pad-btn operador" onclick="agregarOperador('+')">+</button>
-                            </div>
-                            <div class="pad-row">
-                                <button class="pad-btn numero" onclick="agregarNumero('1')">1</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('2')">2</button>
-                                <button class="pad-btn numero" onclick="agregarNumero('3')">3</button>
-                                <button class="pad-btn igual" onclick="calcularResultado()">=</button>
-                            </div>
-                            <div class="pad-row">
-                                <button class="pad-btn numero zero" onclick="agregarNumero('0')">0</button>
-                                <button class="pad-btn" onclick="agregarDecimal()">.</button>
-                                <button class="pad-btn dbm" onclick="convertirAdBm()">dBm</button>
-                                <button class="pad-btn db" onclick="operarEnDb()">dB</button>
-                            </div>
+                            <button class="pad-btn numero" onclick="agregarNumero('7')">7</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('8')">8</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('9')">9</button>
+                            <button class="pad-btn" onclick="borrarUltimo()">DEL</button>
+                            <button class="pad-btn" onclick="limpiarDisplay()">AC</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('4')">4</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('5')">5</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('6')">6</button>
+                            <button class="pad-btn operador" onclick="agregarOperador('*')">×</button>
+                            <button class="pad-btn operador" onclick="agregarOperador('/')">/</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('1')">1</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('2')">2</button>
+                            <button class="pad-btn numero" onclick="agregarNumero('3')">3</button>
+                            <button class="pad-btn operador" onclick="agregarOperador('+')">+</button>
+                            <button class="pad-btn operador" onclick="agregarOperador('-')">−</button>
+                            <button class="pad-btn numero zero" onclick="agregarNumero('0')">0</button>
+                            <button class="pad-btn" onclick="agregarDecimal()">.</button>
+                            <button class="pad-btn operador" onclick="operarEnDb()">DB</button>
+                            <button class="pad-btn operador" onclick="convertirAdBm()">DBm</button>
+                            <button class="pad-btn operador" onclick="convertirAdBm()">a dBm</button>
+                            <button class="pad-btn operador" onclick="convertirAdB()">a dB</button>
+                            <button class="pad-btn igual" onclick="calcularResultado()">=</button>
                         </div>
                     </div>
                 
@@ -127,6 +119,7 @@
                     <div class="historial">
                         <h3>Historial de cálculos</h3>
                         <div id="historialCalculos" class="historial-lista"></div>
+                        <button class="btn-reset" onclick="eliminarHistorial()">Eliminar Historial</button>
                     </div>
                 </div>
                 <div id="pasoAPasoDbm" class="paso-a-paso"></div>

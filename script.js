@@ -309,10 +309,12 @@ let displayValue = "0";
 let operacionActual = "";
 let valorAnterior = null;
 let esperandoSegundoOperando = false;
+let currentUnit = ""; // Track the current unit (dB or dBm)
 
 // Funciones para la calculadora
 function actualizarDisplay() {
-    document.getElementById("display").value = displayValue;
+    const displayElement = document.getElementById("display");
+    displayElement.value = `${displayValue} ${currentUnit}`;
 }
 
 function agregarNumero(numero) {
@@ -334,6 +336,7 @@ function agregarDecimal() {
 
 function limpiarDisplay() {
     displayValue = "0";
+    currentUnit = "";
     operacionActual = "";
     valorAnterior = null;
     esperandoSegundoOperando = false;
@@ -350,7 +353,8 @@ function borrarUltimo() {
 
 function agregarOperador(operador) {
     const valorActual = parseFloat(displayValue);
-    
+    if (isNaN(valorActual)) return;
+
     if (valorAnterior === null) {
         valorAnterior = valorActual;
     } else if (operacionActual) {
@@ -358,7 +362,7 @@ function agregarOperador(operador) {
         displayValue = String(resultado);
         valorAnterior = resultado;
     }
-    
+
     esperandoSegundoOperando = true;
     operacionActual = operador;
     actualizarDisplay();
@@ -366,19 +370,19 @@ function agregarOperador(operador) {
 
 function calcularResultado() {
     const valorActual = parseFloat(displayValue);
-    
-    if (operacionActual && valorAnterior !== null) {
-        const resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
-        
-        // Agregamos al historial
-        agregarAlHistorial(`${valorAnterior} ${operacionActual} ${valorActual} = ${resultado}`);
-        
-        displayValue = String(resultado);
-        valorAnterior = null;
-        operacionActual = "";
-        esperandoSegundoOperando = false;
-        actualizarDisplay();
-    }
+    if (isNaN(valorActual) || !operacionActual || valorAnterior === null) return;
+
+    const resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
+    const unidad = currentUnit || "dB"; // Default to dB if no unit is set
+
+    const explicacion = `Se realizó la operación ${valorAnterior} ${unidad} ${operacionActual} ${valorActual} ${unidad}, obteniendo ${resultado} ${unidad}.`;
+    agregarAlHistorial(`${valorAnterior} ${unidad} ${operacionActual} ${valorActual} ${unidad} = ${resultado} ${unidad}`, explicacion);
+
+    displayValue = String(resultado);
+    valorAnterior = null;
+    operacionActual = "";
+    esperandoSegundoOperando = false;
+    actualizarDisplay();
 }
 
 function realizarCalculo(num1, num2, operador) {
@@ -403,9 +407,11 @@ function convertirAdBm() {
         const resultadoDbm = 10 * Math.log10(valorActual);
         
         // Agregamos al historial
-        agregarAlHistorial(`${valorActual} mW = ${resultadoDbm.toFixed(2)} dBm`);
+        const explicacion = `Se convirtió ${valorActual} mW a dBm usando la fórmula dBm = 10 * log10(mW), obteniendo ${resultadoDbm.toFixed(2)} dBm.`;
+        agregarAlHistorial(`${valorActual} mW = ${resultadoDbm.toFixed(2)} dBm`, explicacion);
         
         displayValue = String(resultadoDbm.toFixed(2));
+        currentUnit = "dBm";
         actualizarDisplay();
         
         // Mostrar paso a paso
@@ -413,13 +419,25 @@ function convertirAdBm() {
     }
 }
 
-function agregarAlHistorial(texto) {
+function convertirAdB() {
+    const valorActual = parseFloat(displayValue);
+    if (isNaN(valorActual)) return;
+
+    const resultadoDb = Math.pow(10, valorActual / 10);
+    const explicacion = `Se convirtió ${valorActual} dBm a mW usando la fórmula mW = 10^(dBm / 10), obteniendo ${resultadoDb.toFixed(2)} mW.`;
+    agregarAlHistorial(`${valorActual} dBm = ${resultadoDb.toFixed(2)} mW`, explicacion);
+    displayValue = String(resultadoDb.toFixed(2));
+    currentUnit = "dB";
+    actualizarDisplay();
+}
+
+function agregarAlHistorial(texto, explicacion) {
     const historial = document.getElementById("historialCalculos");
     const item = document.createElement("div");
     item.className = "historial-item";
-    item.textContent = texto;
+    item.innerHTML = `<strong>${texto}</strong><br><small>${explicacion}</small>`;
     historial.prepend(item);
-    
+
     // Limitamos a 10 elementos en el historial
     if (historial.children.length > 10) {
         historial.removeChild(historial.lastChild);
@@ -435,12 +453,22 @@ function mostrarPasoAPasoDbm(valorMw, resultadoDbm) {
     pasoAPaso.appendChild(explicacionInicial);
 
     const formulaPaso = document.createElement('p');
-    formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW)`;
+    formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW).`;
     pasoAPaso.appendChild(formulaPaso);
 
     const calculoPaso = document.createElement('p');
-    calculoPaso.textContent = `2. dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm`;
+    calculoPaso.textContent = `2. Sustituimos: dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm.`;
     pasoAPaso.appendChild(calculoPaso);
+
+    const conclusion = document.createElement('p');
+    conclusion.textContent = `Resultado final: ${resultadoDbm.toFixed(2)} dBm.`;
+    conclusion.style.fontWeight = 'bold';
+    pasoAPaso.appendChild(conclusion);
+}
+
+function eliminarHistorial() {
+    const historial = document.getElementById("historialCalculos");
+    historial.innerHTML = ""; // Clear the history content
 }
 
 // Inicializar el display cuando se carga la página
