@@ -24,7 +24,6 @@ header {
     flex-direction: column; /* Asegura que el contenido esté en columna */
 }
 
-
 h1, h2, h3 {
     margin-bottom: 0px;
 }
@@ -233,11 +232,14 @@ h1, h2, h3 {
 
 .drop-zone {
     width: 100%;
-    height: 150px;
+    min-height: 150px; /* Asegura un tamaño mínimo */
     border: 2px dashed #000;
     display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas */
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Alinea los elementos al inicio */
+    gap: 10px; /* Espaciado entre los rectángulos */
+    padding: 10px; /* Espaciado interno */
     margin: 20px 0;
     background-color: #f9f9f9;
     border-radius: 10px;
@@ -246,45 +248,32 @@ h1, h2, h3 {
 .drop-zone p {
     font-size: 18px;
     color: #555;
+    margin: 0; /* Elimina márgenes adicionales */
 }
 
 .input-container {
     margin-top: 20px;
     text-align: center;
+    display: none; /* Ocultar por defecto */
 }
 
-.ajuste-item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 14px;
-    min-width: 80px; /* Adjusted for numbering */
-    position: relative; /* Ensure proper alignment */
-}
-
-.ajuste-item::before {
-    content: attr(data-index);
+.lineas-conexiones {
     position: absolute;
-    left: -20px; /* Adjust spacing for numbering */
-    font-size: 12px;
-    font-weight: bold;
-    color: #333;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Evita interferencias con eventos de usuario */
+    z-index: 0; /* Coloca las líneas detrás de los elementos */
+}
+
+.lineas-conexiones line {
+    stroke: black; /* Color negro para las líneas */
+    stroke-width: 2; /* Grosor de las líneas */
 }
 
 .linea-ajustes {
-    margin-top: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px 0;
-    flex-wrap: wrap;
-}
-
-.linea-ajustes {
+    position: relative; /* Necesario para posicionar el SVG */
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -292,20 +281,30 @@ h1, h2, h3 {
     padding: 10px;
     border: 2px dashed #ccc;
     border-radius: 5px;
-    min-height: 50px;
+    min-height: 150px; /* Mantener el tamaño original */
     background-color: #f9f9f9;
 }
 
 .ajuste-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
-    border-radius: 5px;
+    margin: 5px;
+    border: 2px solid black; /* Borde negro */
+    border-radius: 5px; /* Bordes redondeados */
     font-weight: bold;
+    font-size: 14px;
+    min-width: 50px; /* Ancho mínimo reducido */
+    min-height: 50px; /* Altura mínima */
     text-align: center;
-    min-width: 60px;
+    color: white; /* Texto blanco */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    cursor: pointer; /* Indica que los elementos son interactivos */
 }
 
 .delete-button {
-    margin-left: 10px;
+    margin-left: 5px; /* Espaciado reducido */
     background-color: white;
     color: black;
     border: none;
@@ -316,7 +315,7 @@ h1, h2, h3 {
 }
 
 .delete-button:hover {
-    background-color: #ccc;
+    background-color: #ccc; /* Fondo gris claro al pasar el mouse */
 }
 
 .resultado-final {
@@ -557,4 +556,60 @@ h1, h2, h3 {
     .calculadora-pad {
         grid-template-columns: repeat(4, 1fr); /* 4 buttons per row for smaller screens */
     }
+}
+
+#triangulosSVG {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    margin-top: 10px;
+    height: 200px;
+    display: block;
+}
+
+#formularioEmergente {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+}
+
+#formularioEmergente .btn-add {
+    margin-right: 10px;
+}
+/* Estilos para la sección teórica */
+.teoria {
+    margin-bottom: 20px;
+    padding: 10px; /* Reduce el padding */
+    background-color: transparent; /* Elimina el fondo */
+    border: none; /* Elimina el borde */
+}
+
+.teoria h3, .teoria h4, .teoria h5 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.4em; /* Tamaño mediano para los encabezados */
+}
+
+.teoria p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    font-size: 1.1em; /* Tamaño mediano para el texto */
+}
+
+.teoria ul {
+    margin-left: 20px;
+    list-style-type: disc;
+    font-size: 1.1em; /* Tamaño mediano para las listas */
+}
+
+.teoria-seccion canvas {
+    display: block;
+    margin: 10px auto;
+    border: none; /* Elimina el borde */
 }

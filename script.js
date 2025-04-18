@@ -44,24 +44,21 @@ document.addEventListener('DOMContentLoaded', function() {
 let draggedElement = null;
 
 function dragStart(event) {
-    event.dataTransfer.setData("type", event.target.className.includes('atenuacion') ? 'atenuacion' : 'ganancia');
+    event.dataTransfer.setData("tipo", event.target.className.includes('atenuacion') ? 'atenuacion' : 'ganancia');
 }
 
 function dragOver(event) {
     event.preventDefault();
-    dropZone.style.backgroundColor = '#e0e0e0';
 }
 
 function drop(event) {
     event.preventDefault();
-    dropZone.style.backgroundColor = '#f9f9f9'; 
-
+    const tipo = event.dataTransfer.getData("tipo");
     const inputContainer = document.getElementById('inputContainer');
-    inputContainer.style.display = 'block'; 
-
+    inputContainer.style.display = 'block';
     const ajusteValor = document.getElementById('ajusteValor');
     ajusteValor.value = '';
-    ajusteValor.dataset.tipo = draggedElement.id === 'atenuacionFigura' ? 'atenuacion' : 'ganancia';
+    ajusteValor.dataset.tipo = tipo;
 }
 
 function agregarAjusteDesdeDrag() {
@@ -83,21 +80,19 @@ function agregarAjusteDesdeDrag() {
 
 function mostrarAjustes() {
     const lineaAjustes = document.getElementById('lineaAjustes');
-    lineaAjustes.innerHTML = ''; 
+    lineaAjustes.innerHTML = '';
 
-    ajustes.forEach((ajuste, index) => {
+    ajustes.forEach((ajuste) => {
         const ajusteDiv = document.createElement('div');
         ajusteDiv.className = 'ajuste-item';
-        ajusteDiv.textContent = `${index + 1}. ${ajuste > 0 ? '+' : ''}${ajuste} dB`; // Add sequential number
-        ajusteDiv.dataset.index = index;
-
+        ajusteDiv.textContent = `${ajuste > 0 ? '+' : ''}${ajuste} dB`;
         ajusteDiv.style.backgroundColor = ajuste > 0 ? 'green' : 'red';
         ajusteDiv.style.color = 'white';
 
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'X';
         deleteButton.className = 'delete-button';
-        deleteButton.onclick = () => eliminarAjuste(index);
+        deleteButton.onclick = () => eliminarAjuste(ajustes.indexOf(ajuste));
 
         ajusteDiv.appendChild(deleteButton);
         lineaAjustes.appendChild(ajusteDiv);
@@ -105,8 +100,8 @@ function mostrarAjustes() {
 }
 
 function eliminarAjuste(index) {
-    ajustes.splice(index, 1); 
-    mostrarAjustes(); 
+    ajustes.splice(index, 1);
+    mostrarAjustes();
 }
 
 function calcularSumaLogaritmica() {
@@ -116,9 +111,7 @@ function calcularSumaLogaritmica() {
     }
 
     const potenciasLineales = ajustes.map(ajuste => Math.pow(10, ajuste / 10));
-
     const sumaPotenciasLineales = potenciasLineales.reduce((total, potencia) => total + potencia, 0);
-
     const resultadoEnDb = 10 * Math.log10(sumaPotenciasLineales);
 
     const resultadoFinal = document.getElementById('resultadoFinal');
@@ -128,7 +121,7 @@ function calcularSumaLogaritmica() {
 }
 
 function mostrarPasoAPasoLogaritmico(potenciasLineales, sumaPotenciasLineales, resultadoEnDb) {
-    const pasoAPaso = document.getElementById('pasoAPasoAtenuacion');
+    const pasoAPaso = document.getElementById('pasoAPasoAtenuacionGanancia');
     pasoAPaso.innerHTML = '';
 
     const explicacionInicial = document.createElement('p');
@@ -171,10 +164,10 @@ function mostrarPasoAPasoLogaritmico(potenciasLineales, sumaPotenciasLineales, r
 }
 
 function reiniciarAjustes() {
-    ajustes = []; 
-    mostrarAjustes(); 
-    document.getElementById('resultadoFinal').textContent = ''; 
-    document.getElementById('pasoAPasoAtenuacion').innerHTML = '';
+    ajustes = [];
+    mostrarAjustes();
+    document.getElementById('resultadoFinal').textContent = '';
+    document.getElementById('pasoAPasoAtenuacionGanancia').innerHTML = '';
 }
 
 // Función para calcular el tiempo de transmisión
@@ -305,271 +298,391 @@ function mostrarPasoAPasoTransmision(tamanoMensaje, unidadTamano, bitsMensaje, v
 }
 
 // Variables para la calculadora
-let displayValue = "0";
-let operacionActual = "";
-let valorAnterior = null;
-let esperandoSegundoOperando = false;
-let currentUnit = ""; // Track the current unit (dB or dBm)
+let display = document.getElementById("display");
+let pasoAPaso = document.getElementById("pasoAPasoDbm");
+let historial = document.getElementById("historialCalculos");
+let expresion = "";
 
-// Funciones para la calculadora
-function actualizarDisplay() {
-    const displayElement = document.getElementById("display");
-    displayElement.value = `${displayValue} ${currentUnit}`;
+
+function agregarUnidad(unidad) {
+    display.value += " " + unidad;
+    expresion += " " + unidad;
 }
 
-function agregarNumero(numero) {
-    if (esperandoSegundoOperando) {
-        displayValue = numero;
-        esperandoSegundoOperando = false;
-    } else {
-        displayValue = displayValue === "0" ? numero : displayValue + numero;
-    }
-    actualizarDisplay();
+function agregarNumero(num) {
+    if (display.value === "0") display.value = num;
+    else display.value += num;
+    expresion += num;
+}
+
+function agregarOperador(op) {
+    display.value += " " + op + " ";
+    expresion += " " + op + " ";
 }
 
 function agregarDecimal() {
-    if (!displayValue.includes(".")) {
-        displayValue += ".";
-        actualizarDisplay();
-    }
-}
-
-function limpiarDisplay() {
-    displayValue = "0";
-    currentUnit = "";
-    operacionActual = "";
-    valorAnterior = null;
-    esperandoSegundoOperando = false;
-    actualizarDisplay();
+    display.value += ".";
+    expresion += ".";
 }
 
 function borrarUltimo() {
-    displayValue = displayValue.toString().slice(0, -1);
-    if (displayValue === "") {
-        displayValue = "0";
-    }
-    actualizarDisplay();
+    display.value = display.value.slice(0, -1);
+    expresion = expresion.slice(0, -1);
 }
 
-function agregarOperador(operador) {
-    const valorActual = parseFloat(displayValue);
-    if (isNaN(valorActual)) return;
-
-    if (valorAnterior === null) {
-        valorAnterior = valorActual;
-    } else if (operacionActual) {
-        const resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
-        displayValue = String(resultado);
-        valorAnterior = resultado;
-    }
-
-    esperandoSegundoOperando = true;
-    operacionActual = operador;
-    actualizarDisplay();
-}
-
-function calcularResultado() {
-    const valorActual = parseFloat(displayValue);
-    if (isNaN(valorActual) || !operacionActual || valorAnterior === null) return;
-
-    const resultado = realizarCalculo(valorAnterior, valorActual, operacionActual);
-    const unidad = currentUnit || "dB"; // Default to dB if no unit is set
-
-    const explicacion = `Se realizó la operación ${valorAnterior} ${unidad} ${operacionActual} ${valorActual} ${unidad}, obteniendo ${resultado} ${unidad}.`;
-    agregarAlHistorial(`${valorAnterior} ${unidad} ${operacionActual} ${valorActual} ${unidad} = ${resultado} ${unidad}`, explicacion);
-
-    displayValue = String(resultado);
-    valorAnterior = null;
-    operacionActual = "";
-    esperandoSegundoOperando = false;
-    actualizarDisplay();
-}
-
-function realizarCalculo(num1, num2, operador) {
-    switch (operador) {
-        case "+":
-            return num1 + num2;
-        case "-":
-            return num1 - num2;
-        case "*":
-            return num1 * num2;
-        case "/":
-            return num1 / num2;
-        default:
-            return num2;
-    }
+function limpiarDisplay() {
+    display.value = "0";
+    expresion = "";
+    pasoAPaso.innerHTML = "";
 }
 
 function convertirAdBm() {
-    const valorActual = parseFloat(displayValue);
-    if (!isNaN(valorActual)) {
-        // Conversión de mW a dBm
-        const resultadoDbm = 10 * Math.log10(valorActual);
-        
-        // Agregamos al historial
-        const explicacion = `Se convirtió ${valorActual} mW a dBm usando la fórmula dBm = 10 * log10(mW), obteniendo ${resultadoDbm.toFixed(2)} dBm.`;
-        agregarAlHistorial(`${valorActual} mW = ${resultadoDbm.toFixed(2)} dBm`, explicacion);
-        
-        displayValue = String(resultadoDbm.toFixed(2));
-        currentUnit = "dBm";
-        actualizarDisplay();
-        
-        // Mostrar paso a paso
-        mostrarPasoAPasoDbm(valorActual, resultadoDbm);
-    }
+    display.value += " dBm";
+    expresion += " dBm";
 }
 
 function convertirAdB() {
-    const valorActual = parseFloat(displayValue);
-    if (isNaN(valorActual)) return;
-
-    const resultadoDb = Math.pow(10, valorActual / 10);
-    const explicacion = `Se convirtió ${valorActual} dBm a mW usando la fórmula mW = 10^(dBm / 10), obteniendo ${resultadoDb.toFixed(2)} mW.`;
-    agregarAlHistorial(`${valorActual} dBm = ${resultadoDb.toFixed(2)} mW`, explicacion);
-    displayValue = String(resultadoDb.toFixed(2));
-    currentUnit = "dB";
-    actualizarDisplay();
+    display.value += " dB";
+    expresion += " dB";
 }
 
-function agregarAlHistorial(texto, explicacion) {
-    const historial = document.getElementById("historialCalculos");
-    const item = document.createElement("div");
-    item.className = "historial-item";
-    item.innerHTML = `<strong>${texto}</strong><br><small>${explicacion}</small>`;
-    historial.prepend(item);
+function operarEnDb() {
+    display.value += " dB";
+    expresion += " dB";
+}
+function calcularResultado() {
+    try {
+        let partes = expresion.trim().split(" ");
+        if (partes.length < 3) return;
 
-    // Limitamos a 10 elementos en el historial
-    if (historial.children.length > 10) {
-        historial.removeChild(historial.lastChild);
+        let [valor1, unidad1, operador, valor2, unidad2] = partes;
+
+        valor1 = parseFloat(valor1);
+        valor2 = parseFloat(valor2);
+
+        if (isNaN(valor1) || isNaN(valor2)) {
+            display.value = "Error";
+            return;
+        }
+
+        // Conversiones
+        const convertirAdBmW = (valor, unidad) => {
+            if (unidad === "dBm") return Math.pow(10, valor / 10); // mW
+            if (unidad === "dBW") return Math.pow(10, valor / 10) * 1000; // W → mW
+            if (unidad === "dB") return valor; // dB es relativo
+            return valor;
+        };
+
+        const convertirDesdemW = (valorEnmW, unidadDestino) => {
+            if (unidadDestino === "dBm") return 10 * Math.log10(valorEnmW);
+            if (unidadDestino === "dBW") return 10 * Math.log10(valorEnmW / 1000);
+            return valorEnmW;
+        };
+
+        // Variables para el paso a paso
+        let baseUnit = unidad1;
+        let resultado = 0;
+        let pasos = [];
+
+        if (unidad1 === "dBm" && unidad2 === "dB" && (operador === "+" || operador === "-")) {
+            resultado = operador === "+" ? valor1 + valor2 : valor1 - valor2;
+            pasos.push(`Operación directa: ${valor1} dBm ${operador} ${valor2} dB = ${resultado.toFixed(2)} dBm`);
+        } else if (unidad1 === "dBW" && unidad2 === "dB" && (operador === "+" || operador === "-")) {
+            resultado = operador === "+" ? valor1 + valor2 : valor1 - valor2;
+            pasos.push(`Operación directa: ${valor1} dBW ${operador} ${valor2} dB = ${resultado.toFixed(2)} dBW`);
+        } else if ((unidad1 === "dBm" || unidad1 === "dBW") && (unidad2 === "dBm" || unidad2 === "dBW")) {
+            // Ambos son absolutos → convertir a mW, operar, y volver
+            let mW1 = convertirAdBmW(valor1, unidad1);
+            let mW2 = convertirAdBmW(valor2, unidad2);
+            let operacionLineal;
+
+            if (operador === "+") operacionLineal = mW1 + mW2;
+            else if (operador === "-") operacionLineal = mW1 - mW2;
+            else if (operador === "*") operacionLineal = mW1 * mW2;
+            else if (operador === "/") operacionLineal = mW1 / mW2;
+
+            resultado = convertirDesdemW(operacionLineal, unidad1);
+            pasos.push(`Convertimos a mW: ${valor1} ${unidad1} → ${mW1.toFixed(4)} mW`);
+            pasos.push(`Convertimos a mW: ${valor2} ${unidad2} → ${mW2.toFixed(4)} mW`);
+            pasos.push(`Realizamos la operación en mW: ${mW1.toFixed(4)} ${operador} ${mW2.toFixed(4)} = ${operacionLineal.toFixed(4)} mW`);
+            pasos.push(`Convertimos el resultado de mW a ${unidad1}: ${operacionLineal.toFixed(4)} mW → ${resultado.toFixed(2)} ${unidad1}`);
+        } else if (unidad1 === "dB" || unidad2 === "dB") {
+            display.value = "Operación inválida";
+            pasos.push("No se puede operar dos valores relativos (dB) ni hacer operaciones absolutas con dB sin base.");
+            mostrarPasoAPaso(pasos);
+            return;
+        } else {
+            display.value = "Unidades no compatibles";
+            return;
+        }
+
+        display.value = resultado.toFixed(2) + " " + baseUnit;
+        historial.innerHTML += `<div>${expresion} = ${resultado.toFixed(2)} ${baseUnit}</div>`;
+        expresion = "";
+
+        function eliminarHistorial() {
+            historial.innerHTML = "";
+        }
+
+        // Mostrar el paso a paso
+        mostrarPasoAPaso(pasos);
+    } catch (error) {
+        display.value = "Error";
+        console.error(error);
     }
 }
-
-function mostrarPasoAPasoDbm(valorMw, resultadoDbm) {
+function mostrarPasoAPaso(pasos) {
     const pasoAPaso = document.getElementById('pasoAPasoDbm');
-    pasoAPaso.innerHTML = '';
+    pasoAPaso.innerHTML = ''; // Limpiar contenido previo
 
-    const explicacionInicial = document.createElement('p');
-    explicacionInicial.textContent = `Para convertir ${valorMw} mW a dBm, seguimos estos pasos:`;
-    pasoAPaso.appendChild(explicacionInicial);
+    const titulo = document.createElement('h3');
+    titulo.textContent = "Paso a paso del cálculo:";
+    titulo.style.color = "#333";
+    titulo.style.marginBottom = "10px";
+    pasoAPaso.appendChild(titulo);
 
-    const formulaPaso = document.createElement('p');
-    formulaPaso.textContent = `1. Usamos la fórmula: dBm = 10 * log10(potencia en mW).`;
-    pasoAPaso.appendChild(formulaPaso);
+    pasos.forEach((paso, index) => {
+        const pasoDiv = document.createElement('div');
+        pasoDiv.textContent = `${index + 1}. ${paso}`;
+        pasoDiv.style.marginBottom = "8px";
+        pasoDiv.style.padding = "10px";
+        pasoDiv.style.border = "1px solid #ddd";
+        pasoDiv.style.borderRadius = "5px";
+        pasoDiv.style.backgroundColor = index % 2 === 0 ? "#f9f9f9" : "#e9e9e9";
+        pasoAPaso.appendChild(pasoDiv);
+    });
 
-    const calculoPaso = document.createElement('p');
-    calculoPaso.textContent = `2. Sustituimos: dBm = 10 * log10(${valorMw}) = ${resultadoDbm.toFixed(2)} dBm.`;
-    pasoAPaso.appendChild(calculoPaso);
+    // Explicación adicional del porqué funciona así
+    const explicacion = document.createElement('div');
+    explicacion.innerHTML = `
+        <h4>¿Por qué funciona así?</h4>
+        <p>Los cálculos con decibelios (dB) se basan en una escala logarítmica, lo que permite expresar relaciones de potencia de forma compacta.</p>
+        <p>Cuando trabajamos con valores absolutos como dBm o dBW, estamos midiendo la potencia en relación a una referencia fija (1 mW o 1 W, respectivamente).</p>
+        <p>Por otro lado, los valores relativos en dB representan una relación entre dos potencias o amplitudes.</p>
+        <p>Para realizar operaciones con dBm o dBW, es necesario convertir los valores a potencias lineales (mW o W), realizar las operaciones, y luego convertir el resultado de vuelta a dBm o dBW.</p>
+        <p>Esto se debe a que los logaritmos convierten multiplicaciones en sumas, lo que simplifica los cálculos en sistemas de comunicación.</p>
+    `;
+    explicacion.style.marginTop = "20px";
+    explicacion.style.padding = "15px";
+    explicacion.style.border = "1px solid #ccc";
+    explicacion.style.borderRadius = "5px";
+    explicacion.style.backgroundColor = "#f9f9f9";
+    pasoAPaso.appendChild(explicacion);
+}
+// Función para calcular el enlace de radio
+let datosEnlaceRadio = [];
 
-    const conclusion = document.createElement('p');
-    conclusion.textContent = `Resultado final: ${resultadoDbm.toFixed(2)} dBm.`;
-    conclusion.style.fontWeight = 'bold';
-    pasoAPaso.appendChild(conclusion);
+// Función para iniciar el arrastre
+function dragStartRadio(event) {
+    event.dataTransfer.setData("tipo", event.target.dataset.tipo); // Guarda el tipo del elemento arrastrado
 }
 
-function eliminarHistorial() {
-    const historial = document.getElementById("historialCalculos");
-    historial.innerHTML = ""; // Clear the history content
+// Función para permitir el evento de soltar
+function dragOverRadio(event) {
+    event.preventDefault(); // Permite el evento de soltar
 }
 
-// Inicializar el display cuando se carga la página
-document.addEventListener('DOMContentLoaded', function() {
-    const displayElement = document.getElementById("display");
-    if (displayElement) {
-        displayElement.value = displayValue;
-    }
-});
+let tipoDatoActual = null; // Variable para almacenar el tipo de dato actual
 
-let queue = [];
-
-function allowDrop(event) {
+function dropRadio(event) {
     event.preventDefault();
+    tipoDatoActual = event.dataTransfer.getData("tipo"); // Recupera el tipo del elemento arrastrado
+    mostrarFormulario(); // Muestra el formulario emergente
 }
 
-function dropOnLine(event) {
-    event.preventDefault();
-    const type = event.dataTransfer.getData("type");
-    const value = parseFloat(prompt(`Ingrese el valor de la ${type === 'atenuacion' ? 'atenuación' : 'ganancia'} en dB:`));
+function mostrarFormulario() {
+    const formulario = document.getElementById('formularioEmergente');
+    formulario.style.display = 'block';
 
-    if (!isNaN(value)) {
-        const adjustedValue = type === 'atenuacion' ? -Math.abs(value) : Math.abs(value);
-        queue.push({ type, value: adjustedValue });
-        addToLine(type, adjustedValue);
-    } else {
-        alert("Por favor, ingrese un valor válido.");
-    }
+    const valorInput = document.getElementById('valorDato');
+    valorInput.value = ''; // Limpia el valor previo
 }
 
-function addToLine(type, value) {
-    const line = document.getElementById("lineaAjustes");
-    const div = document.createElement("div");
-    div.className = `ajuste-item ${type}`;
-    div.textContent = `${value} dB`;
-    div.style.backgroundColor = type === 'atenuacion' ? 'red' : 'green';
-    div.style.color = 'white';
-
-    line.appendChild(div);
+function cerrarFormulario() {
+    const formulario = document.getElementById('formularioEmergente');
+    formulario.style.display = 'none';
+    tipoDatoActual = null; // Resetea el tipo de dato actual
 }
 
-function calcularCola() {
-    if (queue.length === 0) {
-        alert("No hay elementos en la cola para calcular.");
+function agregarDatoDesdeFormulario() {
+    const valorInput = document.getElementById('valorDato');
+    const valor = parseFloat(valorInput.value);
+
+    if (isNaN(valor)) {
+        alert("Por favor, ingrese un valor numérico válido.");
         return;
     }
 
-    const totalDb = queue.reduce((sum, item) => sum + item.value, 0);
-    document.getElementById("resultadoFinal").textContent = `Resultado Total: ${totalDb.toFixed(2)} dB`;
-
-    mostrarPasoAPaso(queue, totalDb);
-
-    // Desplazar la página al procedimiento
-    document.getElementById("pasoAPasoAtenuacion").scrollIntoView({ behavior: "smooth" });
+    datosEnlaceRadio.push({ tipo: tipoDatoActual, valor }); // Agrega el dato al arreglo
+    mostrarDatosEnlaceRadio(); // Actualiza la visualización
+    cerrarFormulario(); // Cierra el formulario
 }
 
-function mostrarPasoAPaso(queue, totalDb) {
-    const pasoAPaso = document.getElementById("pasoAPasoAtenuacion");
-    pasoAPaso.innerHTML = ""; // Clear previous steps
+function mostrarDatosEnlaceRadio() {
+    const dropZone = document.getElementById('dropZoneRadio');
+    dropZone.innerHTML = ''; // Limpia los rectángulos previos
 
-    const explicacionInicial = document.createElement("p");
-    explicacionInicial.textContent = "Procedimiento detallado para calcular el resultado total:";
-    pasoAPaso.appendChild(explicacionInicial);
+    datosEnlaceRadio.forEach((dato, index) => {
+        // Crear rectángulo para representar el dato
+        const rect = document.createElement('div');
+        rect.className = 'ajuste-item';
+        rect.textContent = `${dato.valor}`; // Muestra solo el valor numérico
+        rect.style.backgroundColor = obtenerColorPorTipo(dato.tipo);
 
-    queue.forEach((item, index) => {
-        const paso = document.createElement("p");
-        paso.textContent = `Paso ${index + 1}: Se agregó una ${item.type === 'atenuacion' ? 'atenuación' : 'ganancia'} de ${Math.abs(item.value)} dB.`;
-        paso.style.marginLeft = "20px";
-        pasoAPaso.appendChild(paso);
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'X';
+        deleteButton.className = 'delete-button';
+        deleteButton.onclick = () => eliminarDatoRadio(index);
 
-        const razonamiento = document.createElement("p");
-        razonamiento.textContent = item.type === 'atenuacion'
-            ? "La atenuación reduce la potencia de la señal, por lo que se resta este valor al total."
-            : "La ganancia aumenta la potencia de la señal, por lo que se suma este valor al total.";
-        razonamiento.style.marginLeft = "40px";
-        razonamiento.style.fontStyle = "italic";
-        pasoAPaso.appendChild(razonamiento);
+        rect.appendChild(deleteButton);
+        dropZone.appendChild(rect);
     });
 
-    const resultadoPaso = document.createElement("p");
-    resultadoPaso.textContent = `Resultado final: La suma total de las atenuaciones y ganancias es ${totalDb.toFixed(2)} dB.`;
-    resultadoPaso.style.fontWeight = "bold";
-    resultadoPaso.style.marginTop = "10px";
-    pasoAPaso.appendChild(resultadoPaso);
-
-    const conclusion = document.createElement("p");
-    conclusion.textContent = "Este resultado representa el nivel de potencia final después de aplicar todas las atenuaciones y ganancias.";
-    conclusion.style.marginTop = "10px";
-    conclusion.style.fontStyle = "italic";
-    pasoAPaso.appendChild(conclusion);
+    // Si no hay datos, muestra el texto "Arrastra aquí"
+    if (datosEnlaceRadio.length === 0) {
+        dropZone.innerHTML = '<p>Arrastra aquí</p>';
+    }
 }
 
-function reiniciarCola() {
-    queue = [];
-    document.getElementById("lineaAjustes").innerHTML = "";
-    document.getElementById("resultadoFinal").textContent = "";
-    document.getElementById("pasoAPasoAtenuacion").innerHTML = ""; // Clear step-by-step explanation
+// Función para obtener el color según el tipo
+function obtenerColorPorTipo(tipo) {
+    switch (tipo) {
+        case 'potenciaTransmitida': return 'red';
+        case 'gananciaTransmisora': return 'green';
+        case 'gananciaReceptora': return 'blue';
+        case 'distancia': return 'orange';
+        case 'frecuencia': return 'purple';
+        default: return 'gray';
+    }
+}
+
+// Función para eliminar un dato
+function eliminarDatoRadio(index) {
+    datosEnlaceRadio.splice(index, 1); // Elimina el dato del arreglo
+    mostrarDatosEnlaceRadio(); // Actualiza la visualización
+}
+
+// Configuración de eventos al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.draggable-radio').forEach(item => {
+        item.addEventListener('dragstart', dragStartRadio);
+    });
+
+    const dropZone = document.getElementById('dropZoneRadio');
+    if (dropZone) {
+        dropZone.addEventListener('dragover', dragOverRadio);
+        dropZone.addEventListener('drop', dropRadio);
+    }
+});
+
+function calcularFSPL() {
+    const distancia = obtenerValorPorTipo('distancia');
+    const frecuencia = obtenerValorPorTipo('frecuencia');
+    const c = 3e8;
+
+    if (distancia === null || frecuencia === null) {
+        alert("Faltan datos: asegúrate de ingresar distancia y frecuencia.");
+        return;
+    }
+
+    const fspl = 20 * Math.log10(distancia) + 20 * Math.log10(frecuencia) - 20 * Math.log10(c);
+
+    document.getElementById("resultadoEnlaceRadio").innerHTML = `
+        <p><strong>Pérdida en el Espacio Libre (FSPL):</strong> ${fspl.toFixed(2)} dB</p>
+    `;
+    document.getElementById("pasoAPasoEnlaceRadio").innerHTML = `
+        <h4>Paso a paso FSPL:</h4>
+        <p>FSPL = 20 * log10(${distancia}) + 20 * log10(${frecuencia}) - 20 * log10(3x10⁸)</p>
+        <p>FSPL = ${fspl.toFixed(2)} dB</p>
+    `;
+}
+
+function calcularPotenciaRecibida() {
+    const pt = obtenerValorPorTipo('potenciaTransmitida');
+    const gt = obtenerValorPorTipo('gananciaTransmisora');
+    const gr = obtenerValorPorTipo('gananciaReceptora');
+    const d = obtenerValorPorTipo('distancia');
+    const f = obtenerValorPorTipo('frecuencia');
+    const c = 3e8;
+
+    if (pt === null || gt === null || gr === null || d === null || f === null) {
+        alert("Faltan datos: asegúrate de ingresar todos los parámetros necesarios.");
+        return;
+    }
+
+    const fspl = 20 * Math.log10(d) + 20 * Math.log10(f) - 20 * Math.log10(c);
+    const pr = pt + gt + gr - fspl;
+
+    document.getElementById("resultadoEnlaceRadio").innerHTML = `
+        <p><strong>Potencia Recibida:</strong> ${pr.toFixed(2)} dBm</p>
+    `;
+    document.getElementById("pasoAPasoEnlaceRadio").innerHTML = `
+        <h4>Paso a paso Potencia Recibida:</h4>
+        <p>FSPL = 20 * log10(${d}) + 20 * log10(${f}) - 20 * log10(3x10⁸)</p>
+        <p>FSPL = ${fspl.toFixed(2)} dB</p>
+        <p>P<sub>r</sub> = ${pt} + ${gt} + ${gr} - ${fspl.toFixed(2)}</p>
+        <p><strong>Resultado:</strong> ${pr.toFixed(2)} dBm</p>
+    `;
+}
+
+function obtenerValorPorTipo(tipo) {
+    const dato = datosEnlaceRadio.find(d => d.tipo === tipo);
+    return dato ? parseFloat(dato.valor) : null;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const dropZone = document.getElementById("lineaAjustes");
-    dropZone.addEventListener("dragover", allowDrop);
-    dropZone.addEventListener("drop", dropOnLine);
+    document.querySelectorAll('.draggable-radio').forEach(item => {
+        item.addEventListener('dragstart', dragStartRadio);
+    });
+
+    const dropZone = document.getElementById('dropZoneRadio');
+    if (dropZone) {
+        dropZone.addEventListener('dragover', dragOverRadio);
+        dropZone.addEventListener('drop', dropRadio);
+    }
 });
+// Función para mostrar el gráfico de AM
+function generarGraficoAM() {
+    const fc = parseFloat(document.getElementById('frecuenciaPortadora').value); // Frecuencia portadora
+    const fm = parseFloat(document.getElementById('frecuenciaModuladora').value); // Frecuencia moduladora
+    const m = parseFloat(document.getElementById('indiceModulacion').value); // Índice de modulación
+
+    if (isNaN(fc) || isNaN(fm) || isNaN(m) || fc <= 0 || fm <= 0 || m < 0 || m > 1) {
+        alert('Por favor, ingrese valores válidos para las frecuencias y el índice de modulación.');
+        return;
+    }
+
+    const canvas = document.getElementById('graficoCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerY = height / 2;
+
+    const samples = 1000; // Número de muestras
+    const dt = 1 / (fc * 10); // Intervalo de tiempo entre muestras
+    const tMax = samples * dt; // Tiempo total
+    const scaleX = width / tMax; // Escala en X
+    const scaleY = centerY * 0.8; // Escala en Y
+
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+
+    for (let i = 0; i < samples; i++) {
+        const t = i * dt;
+        const moduladora = 1 + m * Math.cos(2 * Math.PI * fm * t); // Señal moduladora
+        const portadora = Math.cos(2 * Math.PI * fc * t); // Señal portadora
+        const señalModulada = moduladora * portadora; // Señal modulada
+
+        const x = t * scaleX;
+        const y = centerY - señalModulada * scaleY;
+
+        ctx.lineTo(x, y);
+    }
+
+    ctx.strokeStyle = '#1E90FF';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+}
+

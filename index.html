@@ -24,6 +24,8 @@
             <button class="tab-button" onclick="openTab(event, 'atenuacion')">Atenuación y Ganancia</button>
             <button class="tab-button" onclick="openTab(event, 'transmision')">Tiempo de Transmisión</button>
             <button class="tab-button" onclick="openTab(event, 'dbm')">Calculadora de dBm/dB</button>
+            <button class="tab-button" onclick="openTab(event, 'enlaceRadio')">Enlace de Radio</button>
+            <button class="tab-button" onclick="openTab(event, 'amplitudModulada')">Amplitud Modulada</button>
         </div>
 
         <div class="tab-content-container">
@@ -35,14 +37,20 @@
                     <div class="draggable atenuacion" draggable="true" ondragstart="dragStart(event)">Atenuación</div>
                     <div class="draggable ganancia" draggable="true" ondragstart="dragStart(event)">Ganancia</div>
                 </div>
-                <div id="lineaAjustes" class="linea-ajustes drop-zone">
+                <div id="lineaAjustes" class="linea-ajustes drop-zone" ondragover="dragOver(event)" ondrop="drop(event)">
                     <p>Arrastra aquí</p>
                 </div>
-                <button class="btn-calculate" onclick="calcularCola()">Calcular Resultado</button>
-                <button class="btn-reset" onclick="reiniciarCola()">Reiniciar</button>
+                <div id="inputContainer" class="input-container" style="display:none; padding: 15px; font-size: 1em;">
+                    <label for="ajusteValor">Ingrese el valor:</label>
+                    <input type="number" id="ajusteValor" placeholder="Ingrese el valor" style="width: 100%; padding: 8px; font-size: 1em;">
+                    <button class="btn-add" onclick="agregarAjusteDesdeDrag()" style="padding: 8px 16px; font-size: 1em;">Agregar</button>
+                </div>
+                <button class="btn-calculate" onclick="calcularSumaLogaritmica()">Calcular Resultado</button>
+                <button class="btn-reset" onclick="reiniciarAjustes()">Reiniciar</button>
                 <div id="resultadoFinal" class="resultado-final"></div>
-                <div id="pasoAPasoAtenuacion" class="paso-a-paso"></div>
+                <div id="pasoAPasoAtenuacionGanancia" class="paso-a-paso"></div>
             </div>
+
 
             <!-- Pestaña de Tiempo de Transmisión -->
             <div id="transmision" class="tab-content">
@@ -107,10 +115,9 @@
                             <button class="pad-btn operador" onclick="agregarOperador('-')">−</button>
                             <button class="pad-btn numero zero" onclick="agregarNumero('0')">0</button>
                             <button class="pad-btn" onclick="agregarDecimal()">.</button>
-                            <button class="pad-btn operador" onclick="operarEnDb()">DB</button>
-                            <button class="pad-btn operador" onclick="convertirAdBm()">DBm</button>
-                            <button class="pad-btn operador" onclick="convertirAdBm()">a dBm</button>
-                            <button class="pad-btn operador" onclick="convertirAdB()">a dB</button>
+                            <button class="pad-btn operador" onclick="agregarUnidad('dB')">dB</button>
+                            <button class="pad-btn operador" onclick="agregarUnidad('dBm')">dBm</button>
+                            <button class="pad-btn operador" onclick="agregarUnidad('dBW')">dBW</button>
                             <button class="pad-btn igual" onclick="calcularResultado()">=</button>
                         </div>
                     </div>
@@ -122,9 +129,134 @@
                         <button class="btn-reset" onclick="eliminarHistorial()">Eliminar Historial</button>
                     </div>
                 </div>
-                <div id="pasoAPasoDbm" class="paso-a-paso"></div>
+                <div id="pasoAPasoDbm" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f4f4f4;"></div>
             </div>
+            <!-- Pestaña enlace de radio -->
+<div id="enlaceRadio" class="tab-content">
+    <h2>Calculadora de Enlace de Radio</h2>
+    <p>Arrastra las figuras correspondientes a los datos de entrada a la línea y digita el valor para crear una cola.</p>
+
+    <!-- Área de elementos arrastrables -->
+    <div class="drag-container">
+        <div class="draggable-radio potencia-transmitida" data-tipo="potenciaTransmitida" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: red;">
+            Potencia Transmitida <small>(dBm)</small>
+        </div>
+        <div class="draggable-radio ganancia-transmisora" data-tipo="gananciaTransmisora" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: green;">
+            Ganancia Transmisora <small>(dBi)</small>
+        </div>
+        <div class="draggable-radio ganancia-receptora" data-tipo="gananciaReceptora" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: blue;">
+            Ganancia Receptora <small>(dBi)</small>
+        </div>
+        <div class="draggable-radio distancia" data-tipo="distancia" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: orange;">
+            Distancia <small>(m)</small>
+        </div>
+        <div class="draggable-radio frecuencia" data-tipo="frecuencia" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: purple;">
+            Frecuencia <small>(Hz)</small>
         </div>
     </div>
+
+    <!-- Área donde se sueltan los datos -->
+    <div id="dropZoneRadio" class="linea-ajustes drop-zone" ondragover="dragOverRadio(event)" ondrop="dropRadio(event)">
+        <!-- Los rectángulos se generarán dinámicamente aquí -->
+    </div>
+
+    <!-- Formulario emergente para ingresar datos -->
+    <div id="formularioEmergente" class="input-container" style="display:none;">
+        <label for="valorDato">Ingrese el valor:</label>
+        <input type="number" id="valorDato" placeholder="Ingrese el valor" style="width: 100%; padding: 8px;">
+        <button class="btn-add" onclick="agregarDatoDesdeFormulario()">Agregar</button>
+        <button class="btn-reset" onclick="cerrarFormulario()">Cancelar</button>
+    </div>
+
+    <!-- Botones de cálculo -->
+    <button class="btn-calculate" onclick="calcularFSPL()">Calcular Pérdida de Espacio Libre</button>
+    <button class="btn-calculate" onclick="calcularPotenciaRecibida()">Calcular Potencia Recibida</button>
+
+    <!-- Resultados -->
+    <div id="resultadoEnlaceRadio" class="resultado-final"></div>
+    <div id="pasoAPasoEnlaceRadio" class="paso-a-paso"></div>
+</div>
+            </div>
+        </div>
+<!-- Contenido de la pestaña Amplitud Modulada -->
+<div id="amplitudModulada" class="tab-content">
+    <h2>Amplitud Modulada (AM)</h2>
+    <p>Explora la teoría y visualización gráfica de la modulación en amplitud.</p>
+
+    <!-- Sección teórica -->
+    <div id="teoriaAM" class="teoria">
+        <h3>📡 ¿Qué es la Amplitud Modulada (AM)?</h3>
+        <p>
+            La Amplitud Modulada (AM) es una técnica de modulación en la que se varía la amplitud de una señal portadora de alta frecuencia 
+            en función de la amplitud de una señal de mensaje (también llamada moduladora), que generalmente es de baja frecuencia. 
+            Esta técnica se utiliza para transmitir información (como voz o música) a través de ondas de radio.
+        </p>
+    
+        <h4>📊 Gráficas típicas en la modulación AM</h4>
+    
+        <!-- Señal moduladora -->
+        <div class="teoria-seccion">
+            <h5>🔸 1. Señal moduladora (mensaje)</h5>
+            <p>
+                Es la señal de información original, generalmente una onda de baja frecuencia (como audio).
+            </p>
+            <p><strong>Ecuación:</strong> <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code></p>
+        </div>
+    
+        <!-- Señal portadora -->
+        <div class="teoria-seccion">
+            <h5>🔸 2. Señal portadora</h5>
+            <p>
+                Señal de alta frecuencia que sirve como base para transmitir la información.
+            </p>
+            <p><strong>Ecuación:</strong> <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code></p>
+        </div>
+    
+        <!-- Señal AM -->
+        <div class="teoria-seccion">
+            <h5>🔸 3. Señal AM (modulada en amplitud)</h5>
+            <p>
+                Es el resultado de aplicar la modulación AM.
+            </p>
+            <p><strong>Ecuación:</strong> <code>s(t) = A<sub>c</sub>[1 + k<sub>a</sub>m(t)] cos(2πf<sub>c</sub>t)</code></p>
+        </div>
+    
+        <!-- Espectro de frecuencia -->
+        <div class="teoria-seccion">
+            <h5>🔸 4. Espectro de frecuencia de la señal AM</h5>
+            <p>
+                La señal AM genera un espectro con tres componentes principales:
+            </p>
+            <ul>
+                <li><strong>Portadora:</strong> <code>f<sub>c</sub></code></li>
+                <li><strong>Banda Lateral Superior (USB):</strong> <code>f<sub>c</sub> + f<sub>m</sub></code></li>
+                <li><strong>Banda Lateral Inferior (LSB):</strong> <code>f<sub>c</sub> - f<sub>m</sub></code></li>
+            </ul>
+        </div>
+    </div>
+    
+
+    <!-- Sección gráfica -->
+    <div id="graficoAM" class="grafico">
+        <h3>Visualización Gráfica</h3>
+        <p>Utiliza los controles para ajustar los parámetros y observar cómo cambia la señal modulada.</p>
+        <div class="input-group">
+            <label for="frecuenciaPortadora">Frecuencia Portadora (Hz):</label>
+            <input type="number" id="frecuenciaPortadora" value="1000" min="1">
+        </div>
+        <div class="input-group">
+            <label for="frecuenciaModuladora">Frecuencia Moduladora (Hz):</label>
+            <input type="number" id="frecuenciaModuladora" value="100" min="1">
+        </div>
+        <div class="input-group">
+            <label for="indiceModulacion">Índice de Modulación (m):</label>
+            <input type="number" id="indiceModulacion" value="0.5" step="0.1" min="0" max="1">
+        </div>
+        <button class="btn-calculate" onclick="generarGraficoAM()">Generar Gráfico</button>
+        <canvas id="graficoCanvas" width="800" height="400" style="border:1px solid #ccc;"></canvas>
+    </div>
+</div>
 </body>
 </html>
+
+
