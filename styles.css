@@ -1,615 +1,729 @@
 /* Estilos generales */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
 body {
-    background-color: #f0f2f5;
-    color: #333;
-    line-height: 1.6;
+  background-color: #f0f2f5;
+  color: #333;
+  line-height: 1.6;
 }
 
 header {
-    background-color: #1E90FF; /* Cambiar el color del encabezado */
-    color: white;
-    text-align: center;
-    padding: 20px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column; /* Asegura que el contenido esté en columna */
+  background-color: #1e90ff; /* Cambiar el color del encabezado */
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Asegura que el contenido esté en columna */
 }
 
-h1, h2, h3 {
-    margin-bottom: 0px;
+h1,
+h2,
+h3 {
+  margin-bottom: 0px;
+}
+
+h2, h3, h4, h5, p, label {
+  margin-bottom: 10px; /* Reducir el margen inferior */
 }
 
 /* Portada */
 .portada {
-    text-align: center;
-    padding: 40px 20px;
-    max-width: 800px;
-    margin: 0 auto;
+  text-align: center;
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .portada img {
-    max-width: 500px; /* Aumentar el tamaño de la imagen */
-    margin: 20px 0;
-    display: block; /* Asegura que la imagen sea un bloque centrado */
-    margin-left: auto;
-    margin-right: auto;
+  max-width: 500px; /* Aumentar el tamaño de la imagen */
+  margin: 20px 0;
+  display: block; /* Asegura que la imagen sea un bloque centrado */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-ingresar {
-    background-color: #1E90FF; /* Cambiar el color del botón */
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-    display: inline-block;
-    margin-top: 20px; /* Espaciado entre la imagen y el botón */
-    text-align: center;
+  background-color: #1e90ff; /* Cambiar el color del botón */
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+  display: inline-block;
+  margin-top: 20px; /* Espaciado entre la imagen y el botón */
+  text-align: center;
 }
 
 .btn-ingresar:hover {
-    background-color: #187bcd; /* Cambiar el color al pasar el mouse */
-    transform: scale(1.05);
+  background-color: #187bcd; /* Cambiar el color al pasar el mouse */
+  transform: scale(1.05);
 }
 
 /* Módulos y pestañas */
 .modulos {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .tab-container {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
 }
 
 .tab-button {
-    background-color: transparent;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    position: relative;
-    transition: 0.3s;
-    color: #555;
-    text-transform: uppercase; /* Make text uppercase */
-    font-weight: bold; /* Make text bold */
-    border-radius: 5px; /* Add rounded corners */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+  color: #555;
+  text-transform: uppercase; /* Make text uppercase */
+  font-weight: bold; /* Make text bold */
+  border-radius: 5px; /* Add rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add subtle shadow */
 }
 
 .tab-button:hover {
-    background-color: #e0f0ff; /* Light blue background on hover */
-    color: #1E90FF; /* Blue text on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
+  background-color: #e0f0ff; /* Light blue background on hover */
+  color: #1e90ff; /* Blue text on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .tab-button.active {
-    color: #1E90FF; /* Cambiar el color del texto activo */
-    font-weight: bold;
-    background-color: #f0f8ff; /* Light blue background for active tab */
-    border: 2px solid #1E90FF; /* Add border to active tab */
+  color: #1e90ff; /* Cambiar el color del texto activo */
+  font-weight: bold;
+  background-color: #f0f8ff; /* Light blue background for active tab */
+  border: 2px solid #1e90ff; /* Add border to active tab */
 }
 
 .tab-button.active::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background-color: #1E90FF; /* Cambiar el color de la línea activa */
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #1e90ff; /* Cambiar el color de la línea activa */
 }
 
 .tab-content-container {
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 .tab-content {
-    display: none;
-    padding: 20px;
+  display: none;
+  padding: 20px;
 }
 
 /* Estilos para formularios e inputs */
 .input-group {
-    margin: 20px 0; /* Maintain vertical spacing between sections */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-}
-
-.input-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-size: 16px; /* Slightly larger font for clarity */
-}
-
-.input-group input, .input-group select {
-    width: 100%; /* Ensure inputs and dropdowns are the same width */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-    box-sizing: border-box;
-    margin-bottom: 10px; /* Add spacing below inputs */
-}
-
-.input-group div {
-    margin-bottom: 15px; /* Add spacing below the buttons */
+  margin: 15px 0; /* Reducir el margen vertical */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .input-group-inline {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Add spacing between label and result */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Add spacing between label and result */
+  margin: 15px 0; /* Reducir el margen vertical */
+}
+
+.input-group label {
+  font-weight: bold;
+  font-size: 16px; /* Slightly larger font for clarity */
+}
+
+.input-group input,
+.input-group select {
+  width: 100%; /* Ensure inputs and dropdowns are the same width */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  margin-bottom: 10px; /* Add spacing below inputs */
+}
+
+.input-group div {
+  margin-bottom: 15px; /* Add spacing below the buttons */
 }
 
 /* Botones */
-.btn-calculate, .btn-reset {
-    background: #3245BC; /* Cambiar el color de los botones */
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-    margin-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 20px; /* Add spacing below the buttons */
+.btn-calculate,
+.btn-reset {
+  background: #3245bc; /* Cambiar el color de los botones */
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px; /* Add spacing below the buttons */
 }
 
-.btn-calculate:hover, .btn-reset:hover {
-    background: #2A568C; /* Cambiar el color al pasar el mouse */
+.btn-calculate:hover,
+.btn-reset:hover {
+  background: #2a568c; /* Cambiar el color al pasar el mouse */
 }
 
 .btn-select {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: 0.3s;
-    margin: 5px;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+  margin: 5px;
 }
 
 .btn-select:hover {
-    background: #218838;
+  background: #218838;
 }
 
 /* Sección de arrastrar y soltar */
 .drag-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
 }
 
 .draggable {
-    width: 150px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    cursor: grab;
-    border-radius: 5px;
-    transition: transform 0.3s;
-    font-weight: bold;
+  width: 150px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: grab;
+  border-radius: 5px;
+  transition: transform 0.3s;
+  font-weight: bold;
 }
 
 .draggable:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 .atenuacion {
-    background-color: red;
+  background-color: red;
 }
 
 .ganancia {
-    background-color: green;
+  background-color: green;
+}
+
+.draggable-radio {
+  width: 180px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: grab;
+  border-radius: 10px; /* Bordes más redondeados */
+  transition: transform 0.3s, box-shadow 0.3s; /* Transiciones suaves */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.draggable-radio:hover {
+  transform: scale(1.1); /* Aumentar ligeramente el tamaño al pasar el mouse */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+}
+
+.draggable-radio:active {
+  transform: scale(1); /* Reducir el tamaño al hacer clic */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra más pequeña */
 }
 
 .drop-zone {
-    width: 100%;
-    min-height: 150px; /* Asegura un tamaño mínimo */
-    border: 2px dashed #000;
-    display: flex;
-    flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas */
-    align-items: center;
-    justify-content: flex-start; /* Alinea los elementos al inicio */
-    gap: 10px; /* Espaciado entre los rectángulos */
-    padding: 10px; /* Espaciado interno */
-    margin: 20px 0;
-    background-color: #f9f9f9;
-    border-radius: 10px;
+  width: 100%;
+  min-height: 150px; /* Asegura un tamaño mínimo */
+  border: 2px dashed #000;
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten en varias filas */
+  align-items: center;
+  justify-content: flex-start; /* Alinea los elementos al inicio */
+  gap: 10px; /* Espaciado entre los rectángulos */
+  padding: 10px; /* Espaciado interno */
+  margin: 20px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
 }
 
 .drop-zone p {
-    font-size: 18px;
-    color: #555;
-    margin: 0; /* Elimina márgenes adicionales */
+  font-size: 18px;
+  color: #555;
+  margin: 0; /* Elimina márgenes adicionales */
 }
 
 .input-container {
-    margin-top: 20px;
-    text-align: center;
-    display: none; /* Ocultar por defecto */
+  margin-top: 20px;
+  text-align: center;
+  display: none; /* Ocultar por defecto */
 }
 
 .lineas-conexiones {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none; /* Evita interferencias con eventos de usuario */
-    z-index: 0; /* Coloca las líneas detrás de los elementos */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Evita interferencias con eventos de usuario */
+  z-index: 0; /* Coloca las líneas detrás de los elementos */
 }
 
 .lineas-conexiones line {
-    stroke: black; /* Color negro para las líneas */
-    stroke-width: 2; /* Grosor de las líneas */
+  stroke: black; /* Color negro para las líneas */
+  stroke-width: 2; /* Grosor de las líneas */
 }
 
 .linea-ajustes {
-    position: relative; /* Necesario para posicionar el SVG */
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
-    padding: 10px;
-    border: 2px dashed #ccc;
-    border-radius: 5px;
-    min-height: 150px; /* Mantener el tamaño original */
-    background-color: #f9f9f9;
+  position: relative; /* Necesario para posicionar el SVG */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  min-height: 150px; /* Mantener el tamaño original */
+  background-color: #f9f9f9;
 }
 
 .ajuste-item {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    margin: 5px;
-    border: 2px solid black; /* Borde negro */
-    border-radius: 5px; /* Bordes redondeados */
-    font-weight: bold;
-    font-size: 14px;
-    min-width: 50px; /* Ancho mínimo reducido */
-    min-height: 50px; /* Altura mínima */
-    text-align: center;
-    color: white; /* Texto blanco */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    cursor: pointer; /* Indica que los elementos son interactivos */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin: 5px;
+  border: 2px solid black; /* Borde negro */
+  border-radius: 5px; /* Bordes redondeados */
+  font-weight: bold;
+  font-size: 14px; /* Tamaño de fuente consistente */
+  min-width: 50px; /* Ancho mínimo reducido */
+  min-height: 50px; /* Altura mínima */
+  text-align: center;
+  color: white; /* Texto blanco */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  cursor: pointer; /* Indica que los elementos son interactivos */
 }
 
 .delete-button {
-    margin-left: 5px; /* Espaciado reducido */
-    background-color: white;
-    color: black;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 2px 5px;
+  margin-left: 5px; /* Espaciado reducido */
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px; /* Tamaño de fuente consistente */
+  padding: 2px 5px;
 }
 
 .delete-button:hover {
-    background-color: #ccc; /* Fondo gris claro al pasar el mouse */
+  background-color: #ccc; /* Fondo gris claro al pasar el mouse */
 }
 
 .resultado-final {
-    margin-top: 20px; /* Add spacing above the result */
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px;
-    background-color: #e6f7ff;
-    border: 2px solid #1E90FF;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    white-space: nowrap; /* Prevent wrapping */
+  margin-top: 20px; /* Espaciado superior */
+  font-size: 16px; /* Tamaño de fuente consistente */
+  font-weight: bold;
+  padding: 10px;
+  background-color: #e6f7ff;
+  border: 2px solid #1e90ff;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* Evitar saltos de línea */
 }
 
 .paso-a-paso {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-    border-left: 4px solid #1E90FF; /* Cambiar el color del borde */
-    font-size: 14px;
-    line-height: 1.5;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  border-left: 4px solid #1e90ff; /* Cambiar el color del borde */
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .paso-a-paso p {
-    margin-bottom: 15px; /* Ensure consistent spacing between steps */
-    line-height: 1.6; /* Improve readability */
+  margin-bottom: 10px; /* Reducir el margen entre pasos */
+  line-height: 1.6; /* Improve readability */
 }
 
 /* Calculadora */
 .calculadora-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 800px;
-    margin: 20px auto; /* Add vertical spacing */
-    gap: 30px; /* Increase spacing between calculator and history */
+  display: flex;
+  justify-content: space-between;
+  max-width: 800px;
+  margin: 20px auto; /* Add vertical spacing */
+  gap: 30px; /* Increase spacing between calculator and history */
 }
 
 .calculadora {
-    flex: 1;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    min-width: 300px;
+  flex: 1;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  min-width: 300px;
 }
 
 .calculadora-display {
-    background-color: #333; /* Dark background for display */
-    padding: 30px; /* Increase padding for better spacing */
-    text-align: right;
-    margin-bottom: 20px; /* Add spacing below the display */
+  background-color: #333; /* Dark background for display */
+  padding: 30px; /* Increase padding for better spacing */
+  text-align: right;
+  margin-bottom: 20px; /* Add spacing below the display */
 }
 
 .calculadora-display input {
-    width: 100%;
-    height: 60px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 28px;
-    text-align: right;
-    outline: none;
+  width: 100%;
+  height: 60px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  text-align: right;
+  outline: none;
 }
 
 .calculadora-pad {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 buttons per row */
-    gap: 15px; /* Increase spacing between buttons */
-    padding: 20px; /* Add padding around the button grid */
-    background-color: #e0e0e0; /* Light gray background */
-    border-radius: 10px; /* Add rounded corners */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 5 buttons per row */
+  gap: 15px; /* Increase spacing between buttons */
+  padding: 20px; /* Add padding around the button grid */
+  background-color: #e0e0e0; /* Light gray background */
+  border-radius: 10px; /* Add rounded corners */
 }
 
 .pad-btn {
-    width: 100%;
-    height: 70px; /* Increase button height */
-    border: none;
-    border-radius: 8px; /* Slightly larger rounded corners */
-    font-size: 20px; /* Increase font size */
-    font-weight: bold;
-    cursor: pointer;
-    background-color: #444; /* Dark gray for buttons */
-    color: white;
-    transition: background-color 0.2s, transform 0.2s;
+  width: 100%;
+  height: 70px; /* Increase button height */
+  border: none;
+  border-radius: 8px; /* Slightly larger rounded corners */
+  font-size: 20px; /* Increase font size */
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #444; /* Dark gray for buttons */
+  color: white;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .pad-btn.numero {
-    background-color: #555; /* Slightly lighter gray for numbers */
+  background-color: #555; /* Slightly lighter gray for numbers */
 }
 
 .pad-btn.operador {
-    background-color: #1E90FF; /* Blue for operators */
+  background-color: #1e90ff; /* Blue for operators */
 }
 
 .pad-btn.igual {
-    background-color: #28a745; /* Green for "=" */
-    grid-column: span 2; /* Spans two columns */
+  background-color: #28a745; /* Green for "=" */
+  grid-column: span 2; /* Spans two columns */
 }
 
 .pad-btn.zero {
-    grid-column: span 2; /* Spans two columns */
+  grid-column: span 2; /* Spans two columns */
 }
 
 .pad-btn:hover {
-    background-color: #666; /* Lighter gray on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
+  background-color: #666; /* Lighter gray on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .pad-btn.operador:hover {
-    background-color: #187bcd; /* Darker blue on hover */
+  background-color: #187bcd; /* Darker blue on hover */
 }
 
 .pad-btn.igual:hover {
-    background-color: #218838; /* Darker green on hover */
+  background-color: #218838; /* Darker green on hover */
 }
 
 .pad-btn[onclick="limpiarDisplay()"],
 .pad-btn[onclick="borrarUltimo()"] {
-    background-color: #ff0800; /* Red for AC and DEL */
+  background-color: #ff0800; /* Red for AC and DEL */
 }
 
 .pad-btn[onclick="limpiarDisplay()"]:hover,
 .pad-btn[onclick="borrarUltimo()"]:hover {
-    background-color: #c9302c; /* Darker red on hover */
+  background-color: #c9302c; /* Darker red on hover */
 }
 
 /* Historial */
 .historial {
-    flex: 1;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    padding: 20px; /* Increase padding for better spacing */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    max-height: 450px; /* Increase max height */
-    min-width: 300px; /* Increase minimum width */
-    overflow-y: auto;
-    margin-top: 20px; /* Add spacing above the history section */
+  flex: 1;
+  background-color: #f5f5f5;
+  border-radius: 10px;
+  padding: 20px; /* Increase padding for better spacing */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  max-height: 450px; /* Increase max height */
+  min-width: 300px; /* Increase minimum width */
+  overflow-y: auto;
+  margin-top: 20px; /* Add spacing above the history section */
 }
 
 .historial h3 {
-    margin-top: 0;
-    margin-bottom: 15px; /* Add spacing below the title */
-    color: #333;
-    border-bottom: 2px solid #ccc; /* Slightly thicker border */
-    padding-bottom: 10px;
+  margin-top: 0;
+  margin-bottom: 15px; /* Add spacing below the title */
+  color: #333;
+  border-bottom: 2px solid #ccc; /* Slightly thicker border */
+  padding-bottom: 10px;
 }
 
 .historial-lista {
-    max-height: 350px;
-    overflow-y: auto;
+  max-height: 350px;
+  overflow-y: auto;
 }
 
 .historial-item {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
 }
 
 .historial-item:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .historial .btn-reset {
-    display: block;
-    margin: 15px auto 0; /* Center the button and add spacing */
-    padding: 10px 20px;
-    font-size: 14px;
+  display: block;
+  margin: 15px auto 0; /* Center the button and add spacing */
+  padding: 10px 20px;
+  font-size: 14px;
 }
 
 /* Tooltip for units */
 .tooltip {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 200px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%; /* Position above the element */
-    left: 50%;
-    margin-left: -100px;
-    opacity: 0;
-    transition: opacity 0.3s;
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position above the element */
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
+  visibility: visible;
+  opacity: 1;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .calculadora-container {
-        flex-direction: column;
-        gap: 20px; /* Adjust spacing for smaller screens */
-    }
-    
-    .calculadora, .historial {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-    
-    .pad-btn {
-        width: 50px;
-        height: 60px; /* Adjust button height for smaller screens */
-        font-size: 18px; /* Adjust font size */
-        margin: 2px;
-    }
-    
-    .pad-btn.zero {
-        width: 104px;
-    }
-    
-    .pad-btn.igual {
-        height: 106px;
-        top: -54px;
-    }
-    
-    .calculadora-display input {
-        height: 50px;
-        font-size: 28px;
-    }
+  .calculadora-container {
+    flex-direction: column;
+    gap: 20px; /* Adjust spacing for smaller screens */
+  }
 
-    .calculadora-display {
-        padding: 20px; /* Adjust padding for smaller screens */
-    }
+  .calculadora,
+  .historial {
+    width: 100%;
+    margin-bottom: 20px;
+  }
 
-    .calculadora-pad {
-        grid-template-columns: repeat(4, 1fr); /* 4 buttons per row for smaller screens */
-    }
+  .pad-btn {
+    width: 50px;
+    height: 60px; /* Adjust button height for smaller screens */
+    font-size: 18px; /* Adjust font size */
+    margin: 2px;
+  }
+
+  .pad-btn.zero {
+    width: 104px;
+  }
+
+  .pad-btn.igual {
+    height: 106px;
+    top: -54px;
+  }
+
+  .calculadora-display input {
+    height: 50px;
+    font-size: 28px;
+  }
+
+  .calculadora-display {
+    padding: 20px; /* Adjust padding for smaller screens */
+  }
+
+  .calculadora-pad {
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ); /* 4 buttons per row for smaller screens */
+  }
 }
 
 #triangulosSVG {
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    margin-top: 10px;
-    height: 200px;
-    display: block;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  margin-top: 10px;
+  height: 200px;
+  display: block;
 }
 
 #formularioEmergente {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff; /* Fondo blanco */
+  padding: 25px; /* Más espacio interno */
+  border: 2px solid #1e90ff; /* Borde azul */
+  border-radius: 15px; /* Bordes más redondeados */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada */
+  z-index: 1000;
+  width: 400px; /* Ancho fijo */
+  text-align: center; /* Centrar contenido */
+}
+
+#formularioEmergente label {
+  font-size: 18px; /* Texto más grande */
+  font-weight: bold;
+  color: #333; /* Color de texto */
+  margin-bottom: 15px; /* Espaciado inferior */
+  display: block;
+}
+
+#formularioEmergente input {
+  width: 90%; /* Ajustar ancho */
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Bordes redondeados */
+  margin-bottom: 20px; /* Espaciado inferior */
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra interna */
+}
+
+#formularioEmergente .btn-add,
+#formularioEmergente .btn-reset {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px; /* Bordes redondeados */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#formularioEmergente .btn-reset {
+  background-color: #1e90ff; /* Azul */
+  color: white;
+  margin-right: 10px; /* Mover a la izquierda */
+}
+
+#formularioEmergente .btn-reset:hover {
+  background-color: #187bcd; /* Azul más oscuro */
+  transform: scale(1.05); /* Efecto de agrandamiento */
 }
 
 #formularioEmergente .btn-add {
-    margin-right: 10px;
-}
-/* Estilos para la sección teórica */
-.teoria {
-    margin-bottom: 20px;
-    padding: 10px; /* Reduce el padding */
-    background-color: transparent; /* Elimina el fondo */
-    border: none; /* Elimina el borde */
+  background-color: #28a745; /* Verde */
+  color: white;
 }
 
-.teoria h3, .teoria h4, .teoria h5 {
-    color: #333;
-    margin-bottom: 10px;
-    font-size: 1.4em; /* Tamaño mediano para los encabezados */
+#formularioEmergente .btn-add:hover {
+  background-color: #218838; /* Verde más oscuro */
+  transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+/* Estilos para la sección teórica */
+.teoria {
+  margin-bottom: 20px;
+  padding: 10px; /* Reduce el padding */
+  background-color: transparent; /* Elimina el fondo */
+  border: none; /* Elimina el borde */
+}
+
+.teoria h3,
+.teoria h4,
+.teoria h5 {
+  color: #333;
+  margin-bottom: 10px;
+  font-size: 1.4em; /* Tamaño mediano para los encabezados */
 }
 
 .teoria p {
-    margin-bottom: 10px;
-    line-height: 1.6;
-    font-size: 1.1em; /* Tamaño mediano para el texto */
+  margin-bottom: 10px;
+  line-height: 1.6;
+  font-size: 1.1em; /* Tamaño mediano para el texto */
 }
 
 .teoria ul {
-    margin-left: 20px;
-    list-style-type: disc;
-    font-size: 1.1em; /* Tamaño mediano para las listas */
+  margin-left: 20px;
+  list-style-type: disc;
+  font-size: 1.1em; /* Tamaño mediano para las listas */
 }
 
 .teoria-seccion canvas {
-    display: block;
-    margin: 10px auto;
-    border: none; /* Elimina el borde */
+  display: block;
+  margin: 10px auto;
+  border: none; /* Elimina el borde */
+}
+
+/* Estilos para organizar las gráficas en cajas más pequeñas y visualmente atractivas */
+.grafica-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Reducir el espacio entre las gráficas */
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.grafica-box {
+  width: 500px; /* Aumentar el ancho del recuadro */
+  height: 350px; /* Aumentar la altura del recuadro */
+  padding: 15px; /* Reducir el padding interno */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.grafica-box canvas {
+  width: 100%; /* Ajustar la gráfica al ancho del recuadro */
+  height: 100%; /* Ajustar la gráfica a la altura del recuadro */
 }

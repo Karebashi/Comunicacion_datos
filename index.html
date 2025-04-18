@@ -1,262 +1,668 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora de Decibeles y Tiempo de Transmisión</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
     <script src="script.js" defer></script>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <h1>Comunicación de Datos</h1>
+      <h1>Comunicación de Datos</h1>
     </header>
-    
+
     <div id="portada" class="portada">
-        <h2>Bienvenido a la Calculadora de Comunicación de Datos</h2>
-        <img src="img/calcular.png" alt="Imagen de portada">
-        <button class="btn-ingresar" onclick="mostrarModulos()">Ingresar</button>
+      <h2>Bienvenido a la Calculadora de Comunicación de Datos</h2>
+      <img src="img/calcular.png" alt="Imagen de portada" />
+      <button class="btn-ingresar" onclick="mostrarModulos()">Ingresar</button>
     </div>
 
-    <div id="modulos" class="modulos" style="display:none">
-        <h2>¿Qué quieres hacer hoy?</h2>
-        <div class="tab-container">
-            <button class="tab-button" onclick="openTab(event, 'atenuacion')">Atenuación y Ganancia</button>
-            <button class="tab-button" onclick="openTab(event, 'transmision')">Tiempo de Transmisión</button>
-            <button class="tab-button" onclick="openTab(event, 'dbm')">Calculadora de dBm/dB</button>
-            <button class="tab-button" onclick="openTab(event, 'enlaceRadio')">Enlace de Radio</button>
-            <button class="tab-button" onclick="openTab(event, 'amplitudModulada')">Amplitud Modulada</button>
+    <div id="modulos" class="modulos" style="display: none">
+      <h2>¿Qué quieres hacer hoy?</h2>
+      <div class="tab-container">
+        <button class="tab-button" onclick="openTab(event, 'atenuacion')">
+          Atenuación y Ganancia
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'transmision')">
+          Tiempo de Transmisión
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'dbm')">
+          Calculadora de dBm/dB
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'enlaceRadio')">
+          Enlace de Radio
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'amplitudModulada')">
+          Amplitud Modulada
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'frecuenciaModulada')">
+          Frecuencia Modulada
+        </button>
+        <button class="tab-button" onclick="openTab(event, 'askFsk')">
+          Modulación ASK y FSK
+        </button>
+      </div>
+
+      <div class="tab-content-container">
+        <!-- Pestaña de Atenuación y Ganancia -->
+        <div id="atenuacion" class="tab-content">
+          <h2>Calculadora de Atenuación y Ganancia</h2>
+          <p>
+            Arrastra las figuras de atenuación o ganancia a la línea y digita el
+            valor para crear una cola.
+          </p>
+          <div class="drag-container">
+            <div
+              class="draggable atenuacion"
+              draggable="true"
+              ondragstart="dragStart(event)"
+            >
+              Atenuación
+            </div>
+            <div
+              class="draggable ganancia"
+              draggable="true"
+              ondragstart="dragStart(event)"
+            >
+              Ganancia
+            </div>
+          </div>
+          <div
+            id="lineaAjustes"
+            class="linea-ajustes drop-zone"
+            ondragover="dragOver(event)"
+            ondrop="drop(event)"
+          >
+            <p>Arrastra aquí</p>
+          </div>
+          <div
+            id="inputContainer"
+            class="input-container"
+            style="display: none; padding: 15px; font-size: 1em"
+          >
+            <label for="ajusteValor">Ingrese el valor:</label>
+            <input
+              type="number"
+              id="ajusteValor"
+              placeholder="Ingrese el valor"
+              style="width: 100%; padding: 8px; font-size: 1em"
+            />
+            <button
+              class="btn-add"
+              onclick="agregarAjusteDesdeDrag()"
+              style="padding: 8px 16px; font-size: 1em"
+            >
+              Agregar
+            </button>
+          </div>
+          <button class="btn-calculate" onclick="calcularSumaLogaritmica()">
+            Calcular Resultado
+          </button>
+          <button class="btn-reset" onclick="reiniciarAjustes()">
+            Reiniciar
+          </button>
+          <div id="resultadoFinal" class="resultado-final"></div>
+          <div id="pasoAPasoAtenuacionGanancia" class="paso-a-paso"></div>
         </div>
 
-        <div class="tab-content-container">
-            <!-- Pestaña de Atenuación y Ganancia -->
-            <div id="atenuacion" class="tab-content">
-                <h2>Calculadora de Atenuación y Ganancia</h2>
-                <p>Arrastra las figuras de atenuación o ganancia a la línea y digita el valor para crear una cola.</p>
-                <div class="drag-container">
-                    <div class="draggable atenuacion" draggable="true" ondragstart="dragStart(event)">Atenuación</div>
-                    <div class="draggable ganancia" draggable="true" ondragstart="dragStart(event)">Ganancia</div>
-                </div>
-                <div id="lineaAjustes" class="linea-ajustes drop-zone" ondragover="dragOver(event)" ondrop="drop(event)">
-                    <p>Arrastra aquí</p>
-                </div>
-                <div id="inputContainer" class="input-container" style="display:none; padding: 15px; font-size: 1em;">
-                    <label for="ajusteValor">Ingrese el valor:</label>
-                    <input type="number" id="ajusteValor" placeholder="Ingrese el valor" style="width: 100%; padding: 8px; font-size: 1em;">
-                    <button class="btn-add" onclick="agregarAjusteDesdeDrag()" style="padding: 8px 16px; font-size: 1em;">Agregar</button>
-                </div>
-                <button class="btn-calculate" onclick="calcularSumaLogaritmica()">Calcular Resultado</button>
-                <button class="btn-reset" onclick="reiniciarAjustes()">Reiniciar</button>
-                <div id="resultadoFinal" class="resultado-final"></div>
-                <div id="pasoAPasoAtenuacionGanancia" class="paso-a-paso"></div>
+        <!-- Pestaña de Tiempo de Transmisión -->
+        <div id="transmision" class="tab-content">
+          <h2>Calculadora de Tiempo de Transmisión</h2>
+          <p>
+            Utiliza esta calculadora para determinar el tiempo necesario para
+            transmitir un mensaje de un tamaño específico a una velocidad
+            determinada.
+          </p>
+          <div class="input-group">
+            <label for="tamanoMensaje">Tamaño del mensaje:</label>
+            <div>
+              <button class="btn-select" onclick="mostrarUnidades('bits')">
+                Bits
+              </button>
+              <button class="btn-select" onclick="mostrarUnidades('bytes')">
+                Bytes
+              </button>
+            </div>
+            <input
+              type="number"
+              id="tamanoMensaje"
+              placeholder="Ingrese el tamaño"
+            />
+            <label for="unidadTamano">Unidad:</label>
+            <select id="unidadTamano" style="display: none"></select>
+          </div>
+          <div class="input-group">
+            <label for="velocidadTransmision">Velocidad de transmisión:</label>
+            <input
+              type="number"
+              id="velocidadTransmision"
+              placeholder="Ingrese la velocidad"
+            />
+            <label for="unidadVelocidad">Unidad:</label>
+            <select id="unidadVelocidad">
+              <option value="bps">bps</option>
+              <option value="kbps">kbps</option>
+              <option value="mbps">mbps</option>
+              <option value="gbps">gbps</option>
+            </select>
+          </div>
+          <div class="input-group-inline">
+            <label for="tiempoTransmision">Tiempo de transmisión:</label>
+            <div class="resultado-final" id="tiempoTransmision">
+              0.0000 segundos
+            </div>
+          </div>
+          <button class="btn-calculate" onclick="calcularTiempoTransmision()">
+            Calcular Tiempo
+          </button>
+          <div id="listaDatosTransmision" class="lista-datos"></div>
+          <div id="pasoAPasoTransmision" class="paso-a-paso"></div>
+        </div>
+
+        <!-- Pestaña de Calculadora dBm/dB -->
+        <div id="dbm" class="tab-content">
+          <h2>Calculadora de dBm/dB</h2>
+          <p>
+            Utiliza esta calculadora para convertir entre valores, realizar
+            sumas y restas.
+          </p>
+
+          <div class="calculadora-container">
+            <!-- Calculadora -->
+            <div class="calculadora">
+              <div class="calculadora-display">
+                <input type="text" id="display" readonly value="0" />
+              </div>
+              <div class="calculadora-pad">
+                <button class="pad-btn numero" onclick="agregarNumero('7')">
+                  7
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('8')">
+                  8
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('9')">
+                  9
+                </button>
+                <button class="pad-btn" onclick="borrarUltimo()">DEL</button>
+                <button class="pad-btn" onclick="limpiarDisplay()">AC</button>
+                <button class="pad-btn numero" onclick="agregarNumero('4')">
+                  4
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('5')">
+                  5
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('6')">
+                  6
+                </button>
+                <button class="pad-btn operador" onclick="agregarOperador('*')">
+                  ×
+                </button>
+                <button class="pad-btn operador" onclick="agregarOperador('/')">
+                  /
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('1')">
+                  1
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('2')">
+                  2
+                </button>
+                <button class="pad-btn numero" onclick="agregarNumero('3')">
+                  3
+                </button>
+                <button class="pad-btn operador" onclick="agregarOperador('+')">
+                  +
+                </button>
+                <button class="pad-btn operador" onclick="agregarOperador('-')">
+                  −
+                </button>
+                <button
+                  class="pad-btn numero zero"
+                  onclick="agregarNumero('0')"
+                >
+                  0
+                </button>
+                <button class="pad-btn" onclick="agregarDecimal()">.</button>
+                <button class="pad-btn operador" onclick="agregarUnidad('dB')">
+                  dB
+                </button>
+                <button class="pad-btn operador" onclick="agregarUnidad('dBm')">
+                  dBm
+                </button>
+                <button class="pad-btn operador" onclick="agregarUnidad('dBW')">
+                  dBW
+                </button>
+                <button class="pad-btn igual" onclick="calcularResultado()">
+                  =
+                </button>
+              </div>
             </div>
 
-
-            <!-- Pestaña de Tiempo de Transmisión -->
-            <div id="transmision" class="tab-content">
-                <h2>Calculadora de Tiempo de Transmisión</h2>
-                <p>Utiliza esta calculadora para determinar el tiempo necesario para transmitir un mensaje de un tamaño específico a una velocidad determinada.</p>
-                <div class="input-group">
-                    <label for="tamanoMensaje">Tamaño del mensaje:</label>
-                    <div>
-                        <button class="btn-select" onclick="mostrarUnidades('bits')">Bits</button>
-                        <button class="btn-select" onclick="mostrarUnidades('bytes')">Bytes</button>
-                    </div>
-                    <input type="number" id="tamanoMensaje" placeholder="Ingrese el tamaño">
-                    <label for="unidadTamano">Unidad:</label>
-                    <select id="unidadTamano" style="display:none;"></select>
-                </div>
-                <div class="input-group">
-                    <label for="velocidadTransmision">Velocidad de transmisión:</label>
-                    <input type="number" id="velocidadTransmision" placeholder="Ingrese la velocidad">
-                    <label for="unidadVelocidad">Unidad:</label>
-                    <select id="unidadVelocidad">
-                        <option value="bps">bps</option>
-                        <option value="kbps">kbps</option>
-                        <option value="mbps">mbps</option>
-                        <option value="gbps">gbps</option>
-                    </select>
-                </div>
-                <div class="input-group-inline">
-                    <label for="tiempoTransmision">Tiempo de transmisión:</label>
-                    <div class="resultado-final" id="tiempoTransmision">0.0000 segundos</div>
-                </div>
-                <button class="btn-calculate" onclick="calcularTiempoTransmision()">Calcular Tiempo</button>
-                <div id="listaDatosTransmision" class="lista-datos"></div>
-                <div id="pasoAPasoTransmision" class="paso-a-paso"></div>
+            <!-- Historial -->
+            <div class="historial">
+              <h3>Historial de cálculos</h3>
+              <div id="historialCalculos" class="historial-lista"></div>
+              <button class="btn-reset" onclick="eliminarHistorial()">
+                Eliminar Historial
+              </button>
             </div>
+          </div>
+          <div
+            id="pasoAPasoDbm"
+            style="
+              margin-top: 20px;
+              padding: 15px;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+              background-color: #f4f4f4;
+            "
+          ></div>
+        </div>
+        <!-- Pestaña enlace de radio -->
+        <div id="enlaceRadio" class="tab-content">
+          <h2>Calculadora de Enlace de Radio</h2>
+          <p>
+            Arrastra las figuras correspondientes a los datos de entrada a la
+            línea y digita el valor para crear una cola.
+          </p>
 
-            <!-- Pestaña de Calculadora dBm/dB -->
-            <div id="dbm" class="tab-content">
-                <h2>Calculadora de dBm/dB</h2>
-                <p>Utiliza esta calculadora para convertir entre valores, realizar sumas y restas.</p>
-                
-                <div class="calculadora-container">
-                    <!-- Calculadora -->
-                    <div class="calculadora">
-                        <div class="calculadora-display">
-                            <input type="text" id="display" readonly value="0">
-                        </div>
-                        <div class="calculadora-pad">
-                            <button class="pad-btn numero" onclick="agregarNumero('7')">7</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('8')">8</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('9')">9</button>
-                            <button class="pad-btn" onclick="borrarUltimo()">DEL</button>
-                            <button class="pad-btn" onclick="limpiarDisplay()">AC</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('4')">4</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('5')">5</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('6')">6</button>
-                            <button class="pad-btn operador" onclick="agregarOperador('*')">×</button>
-                            <button class="pad-btn operador" onclick="agregarOperador('/')">/</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('1')">1</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('2')">2</button>
-                            <button class="pad-btn numero" onclick="agregarNumero('3')">3</button>
-                            <button class="pad-btn operador" onclick="agregarOperador('+')">+</button>
-                            <button class="pad-btn operador" onclick="agregarOperador('-')">−</button>
-                            <button class="pad-btn numero zero" onclick="agregarNumero('0')">0</button>
-                            <button class="pad-btn" onclick="agregarDecimal()">.</button>
-                            <button class="pad-btn operador" onclick="agregarUnidad('dB')">dB</button>
-                            <button class="pad-btn operador" onclick="agregarUnidad('dBm')">dBm</button>
-                            <button class="pad-btn operador" onclick="agregarUnidad('dBW')">dBW</button>
-                            <button class="pad-btn igual" onclick="calcularResultado()">=</button>
-                        </div>
-                    </div>
-                
-                    <!-- Historial -->
-                    <div class="historial">
-                        <h3>Historial de cálculos</h3>
-                        <div id="historialCalculos" class="historial-lista"></div>
-                        <button class="btn-reset" onclick="eliminarHistorial()">Eliminar Historial</button>
-                    </div>
-                </div>
-                <div id="pasoAPasoDbm" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; background-color: #f4f4f4;"></div>
+          <!-- Área de elementos arrastrables -->
+          <div class="drag-container">
+            <div
+              class="draggable-radio potencia-transmitida"
+              data-tipo="potenciaTransmitida"
+              draggable="true"
+              ondragstart="dragStartRadio(event)"
+              style="background-color: red"
+            >
+              Potencia Transmitida <small>(dBm)</small>
             </div>
-            <!-- Pestaña enlace de radio -->
-<div id="enlaceRadio" class="tab-content">
-    <h2>Calculadora de Enlace de Radio</h2>
-    <p>Arrastra las figuras correspondientes a los datos de entrada a la línea y digita el valor para crear una cola.</p>
+            <div
+              class="draggable-radio ganancia-transmisora"
+              data-tipo="gananciaTransmisora"
+              draggable="true"
+              ondragstart="dragStartRadio(event)"
+              style="background-color: green"
+            >
+              Ganancia Transmisora <small>(dBi)</small>
+            </div>
+            <div
+              class="draggable-radio ganancia-receptora"
+              data-tipo="gananciaReceptora"
+              draggable="true"
+              ondragstart="dragStartRadio(event)"
+              style="background-color: blue"
+            >
+              Ganancia Receptora <small>(dBi)</small>
+            </div>
+            <div
+              class="draggable-radio distancia"
+              data-tipo="distancia"
+              draggable="true"
+              ondragstart="dragStartRadio(event)"
+              style="background-color: orange"
+            >
+              Distancia <small>(m)</small>
+            </div>
+            <div
+              class="draggable-radio frecuencia"
+              data-tipo="frecuencia"
+              draggable="true"
+              ondragstart="dragStartRadio(event)"
+              style="background-color: purple"
+            >
+              Frecuencia <small>(Hz)</small>
+            </div>
+          </div>
 
-    <!-- Área de elementos arrastrables -->
-    <div class="drag-container">
-        <div class="draggable-radio potencia-transmitida" data-tipo="potenciaTransmitida" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: red;">
-            Potencia Transmitida <small>(dBm)</small>
+          <!-- Área donde se sueltan los datos -->
+          <div
+            id="dropZoneRadio"
+            class="linea-ajustes drop-zone"
+            ondragover="dragOverRadio(event)"
+            ondrop="dropRadio(event)"
+          >
+            <!-- Los rectángulos se generarán dinámicamente aquí -->
+          </div>
+
+          <!-- Formulario emergente para ingresar datos -->
+          <div
+            id="formularioEmergente"
+            class="input-container"
+            style="display: none"
+          >
+            <label for="valorDato">Ingrese el valor:</label>
+            <input
+              type="number"
+              id="valorDato"
+              placeholder="Ingrese el valor"
+              style="width: 100%; padding: 8px"
+            />
+            <button class="btn-reset" onclick="cerrarFormulario()">
+              ❌ Cancelar
+            </button>
+            <button class="btn-add" onclick="agregarDatoDesdeFormulario()">
+              ➕ Agregar
+            </button>
+          </div>
+
+          <!-- Botones de cálculo -->
+          <button class="btn-calculate" onclick="calcularFSPL()">
+            Calcular Pérdida de Espacio Libre
+          </button>
+          <button class="btn-calculate" onclick="calcularPotenciaRecibida()">
+            Calcular Potencia Recibida
+          </button>
+
+          <!-- Resultados -->
+          <div id="resultadoEnlaceRadio" class="resultado-final"></div>
+          <div id="pasoAPasoEnlaceRadio" class="paso-a-paso"></div>
         </div>
-        <div class="draggable-radio ganancia-transmisora" data-tipo="gananciaTransmisora" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: green;">
-            Ganancia Transmisora <small>(dBi)</small>
-        </div>
-        <div class="draggable-radio ganancia-receptora" data-tipo="gananciaReceptora" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: blue;">
-            Ganancia Receptora <small>(dBi)</small>
-        </div>
-        <div class="draggable-radio distancia" data-tipo="distancia" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: orange;">
-            Distancia <small>(m)</small>
-        </div>
-        <div class="draggable-radio frecuencia" data-tipo="frecuencia" draggable="true" ondragstart="dragStartRadio(event)" style="background-color: purple;">
-            Frecuencia <small>(Hz)</small>
-        </div>
+      </div>
     </div>
+    <!-- Contenido de la pestaña Amplitud Modulada -->
+    <div id="amplitudModulada" class="tab-content">
+      <h2>Amplitud Modulada (AM)</h2>
+      <p>
+        Explora la teoría y visualización gráfica de la modulación en amplitud.
+      </p>
 
-    <!-- Área donde se sueltan los datos -->
-    <div id="dropZoneRadio" class="linea-ajustes drop-zone" ondragover="dragOverRadio(event)" ondrop="dropRadio(event)">
-        <!-- Los rectángulos se generarán dinámicamente aquí -->
-    </div>
-
-    <!-- Formulario emergente para ingresar datos -->
-    <div id="formularioEmergente" class="input-container" style="display:none;">
-        <label for="valorDato">Ingrese el valor:</label>
-        <input type="number" id="valorDato" placeholder="Ingrese el valor" style="width: 100%; padding: 8px;">
-        <button class="btn-add" onclick="agregarDatoDesdeFormulario()">Agregar</button>
-        <button class="btn-reset" onclick="cerrarFormulario()">Cancelar</button>
-    </div>
-
-    <!-- Botones de cálculo -->
-    <button class="btn-calculate" onclick="calcularFSPL()">Calcular Pérdida de Espacio Libre</button>
-    <button class="btn-calculate" onclick="calcularPotenciaRecibida()">Calcular Potencia Recibida</button>
-
-    <!-- Resultados -->
-    <div id="resultadoEnlaceRadio" class="resultado-final"></div>
-    <div id="pasoAPasoEnlaceRadio" class="paso-a-paso"></div>
-</div>
-            </div>
-        </div>
-<!-- Contenido de la pestaña Amplitud Modulada -->
-<div id="amplitudModulada" class="tab-content">
-    <h2>Amplitud Modulada (AM)</h2>
-    <p>Explora la teoría y visualización gráfica de la modulación en amplitud.</p>
-
-    <!-- Sección teórica -->
-    <div id="teoriaAM" class="teoria">
+      <!-- Sección teórica -->
+      <div id="teoriaAM" class="teoria">
         <h3>📡 ¿Qué es la Amplitud Modulada (AM)?</h3>
         <p>
-            La Amplitud Modulada (AM) es una técnica de modulación en la que se varía la amplitud de una señal portadora de alta frecuencia 
-            en función de la amplitud de una señal de mensaje (también llamada moduladora), que generalmente es de baja frecuencia. 
-            Esta técnica se utiliza para transmitir información (como voz o música) a través de ondas de radio.
+          La Amplitud Modulada (AM) es una técnica de modulación en la que se
+          varía la amplitud de una señal portadora de alta frecuencia en función
+          de la amplitud de una señal de mensaje (también llamada moduladora),
+          que generalmente es de baja frecuencia. Esta técnica se utiliza para
+          transmitir información (como voz o música) a través de ondas de radio.
         </p>
-    
+
         <h4>📊 Gráficas típicas en la modulación AM</h4>
-    
+
         <!-- Señal moduladora -->
         <div class="teoria-seccion">
-            <h5>🔸 1. Señal moduladora (mensaje)</h5>
-            <p>
-                Es la señal de información original, generalmente una onda de baja frecuencia (como audio).
-            </p>
-            <p><strong>Ecuación:</strong> <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code></p>
+          <h5>🔸 1. Señal moduladora (mensaje)</h5>
+          <p>
+            Es la señal de información original, generalmente una onda de baja
+            frecuencia (como audio).
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code>
+          </p>
         </div>
-    
+
         <!-- Señal portadora -->
         <div class="teoria-seccion">
-            <h5>🔸 2. Señal portadora</h5>
-            <p>
-                Señal de alta frecuencia que sirve como base para transmitir la información.
-            </p>
-            <p><strong>Ecuación:</strong> <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code></p>
+          <h5>🔸 2. Señal portadora</h5>
+          <p>
+            Señal de alta frecuencia que sirve como base para transmitir la
+            información.
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code>
+          </p>
         </div>
-    
+
         <!-- Señal AM -->
         <div class="teoria-seccion">
-            <h5>🔸 3. Señal AM (modulada en amplitud)</h5>
-            <p>
-                Es el resultado de aplicar la modulación AM.
-            </p>
-            <p><strong>Ecuación:</strong> <code>s(t) = A<sub>c</sub>[1 + k<sub>a</sub>m(t)] cos(2πf<sub>c</sub>t)</code></p>
+          <h5>🔸 3. Señal AM (modulada en amplitud)</h5>
+          <p>Es el resultado de aplicar la modulación AM.</p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code
+              >s(t) = A<sub>c</sub>[1 + k<sub>a</sub>m(t)]
+              cos(2πf<sub>c</sub>t)</code
+            >
+          </p>
         </div>
-    
+
         <!-- Espectro de frecuencia -->
         <div class="teoria-seccion">
-            <h5>🔸 4. Espectro de frecuencia de la señal AM</h5>
-            <p>
-                La señal AM genera un espectro con tres componentes principales:
-            </p>
-            <ul>
-                <li><strong>Portadora:</strong> <code>f<sub>c</sub></code></li>
-                <li><strong>Banda Lateral Superior (USB):</strong> <code>f<sub>c</sub> + f<sub>m</sub></code></li>
-                <li><strong>Banda Lateral Inferior (LSB):</strong> <code>f<sub>c</sub> - f<sub>m</sub></code></li>
-            </ul>
+          <h5>🔸 4. Espectro de frecuencia de la señal AM</h5>
+          <p>
+            La señal AM genera un espectro con tres componentes principales:
+          </p>
+          <ul>
+            <li>
+              <strong>Portadora:</strong> <code>f<sub>c</sub></code>
+            </li>
+            <li>
+              <strong>Banda Lateral Superior (USB):</strong>
+              <code>f<sub>c</sub> + f<sub>m</sub></code>
+            </li>
+            <li>
+              <strong>Banda Lateral Inferior (LSB):</strong>
+              <code>f<sub>c</sub> - f<sub>m</sub></code>
+            </li>
+          </ul>
         </div>
-    </div>
-    
+      </div>
 
-    <!-- Sección gráfica -->
-    <div id="graficoAM" class="grafico">
+      <!-- Sección gráfica -->
+      <div id="graficoAM" class="grafico">
         <h3>Visualización Gráfica</h3>
-        <p>Utiliza los controles para ajustar los parámetros y observar cómo cambia la señal modulada.</p>
+        <p>
+          Utiliza los controles para ajustar los parámetros y observar cómo
+          cambia la señal modulada.
+        </p>
         <div class="input-group">
-            <label for="frecuenciaPortadora">Frecuencia Portadora (Hz):</label>
-            <input type="number" id="frecuenciaPortadora" value="1000" min="1">
+          <label for="frecuenciaPortadora">Frecuencia Portadora (Hz):</label>
+          <input type="number" id="frecuenciaPortadora" value="1000" min="1" />
         </div>
         <div class="input-group">
-            <label for="frecuenciaModuladora">Frecuencia Moduladora (Hz):</label>
-            <input type="number" id="frecuenciaModuladora" value="100" min="1">
+          <label for="frecuenciaModuladora">Frecuencia Moduladora (Hz):</label>
+          <input type="number" id="frecuenciaModuladora" value="100" min="1" />
         </div>
         <div class="input-group">
-            <label for="indiceModulacion">Índice de Modulación (m):</label>
-            <input type="number" id="indiceModulacion" value="0.5" step="0.1" min="0" max="1">
+          <label for="indiceModulacion">Índice de Modulación (m):</label>
+          <input
+            type="number"
+            id="indiceModulacion"
+            value="0.5"
+            step="0.1"
+            min="0"
+            max="1"
+          />
         </div>
-        <button class="btn-calculate" onclick="generarGraficoAM()">Generar Gráfico</button>
-        <canvas id="graficoCanvas" width="800" height="400" style="border:1px solid #ccc;"></canvas>
+        <button class="btn-calculate" onclick="generarGraficoAM()">
+          Generar Gráfico
+        </button>
+        <canvas
+          id="graficoCanvas"
+          width="800"
+          height="400"
+          style="border: 1px solid #ccc"
+        ></canvas>
+      </div>
     </div>
-</div>
-</body>
+    <!-- Contenido de la pestaña Frecuencia Modulada -->
+    <div id="frecuenciaModulada" class="tab-content">
+      <h2>Frecuencia Modulada (FM)</h2>
+      <p>Calcula y visualiza la modulación en frecuencia.</p>
+
+      <!-- Sección teórica -->
+      <div id="teoriaFM" class="teoria">
+        <h3>📡 ¿Qué es la Frecuencia Modulada (FM)?</h3>
+        <p>
+          La Frecuencia Modulada (FM) es una técnica de modulación en la que se varía la frecuencia de una señal portadora de alta frecuencia en función de la amplitud de una señal de mensaje (moduladora), que generalmente es de baja frecuencia. Esta técnica es ampliamente utilizada en la transmisión de señales de audio de alta calidad, como en la radio FM.
+        </p>
+
+        <h4>📊 Gráficas típicas en la modulación FM</h4>
+
+        <!-- Señal moduladora -->
+        <div class="teoria-seccion">
+          <h5>🔸 1. Señal moduladora (mensaje)</h5>
+          <p>
+            Es la señal de información original, generalmente una onda de baja frecuencia (como audio).
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code>
+          </p>
+        </div>
+
+        <!-- Señal portadora -->
+        <div class="teoria-seccion">
+          <h5>🔸 2. Señal portadora</h5>
+          <p>
+            Señal de alta frecuencia que sirve como base para transmitir la información.
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code>
+          </p>
+        </div>
+
+        <!-- Señal FM -->
+        <div class="teoria-seccion">
+          <h5>🔸 3. Señal FM (modulada en frecuencia)</h5>
+          <p>Es el resultado de aplicar la modulación FM.</p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code
+              >s(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t +
+              β sin(2πf<sub>m</sub>t))</code
+            >
+          </p>
+        </div>
+
+        <!-- Espectro de frecuencia -->
+        <div class="teoria-seccion">
+          <h5>🔸 4. Espectro de frecuencia de la señal FM</h5>
+          <p>
+            La señal FM genera un espectro con múltiples componentes debido a las bandas laterales, que dependen del índice de modulación (<code>β</code>).
+          </p>
+          <ul>
+            <li>
+              <strong>Portadora:</strong> <code>f<sub>c</sub></code>
+            </li>
+            <li>
+              <strong>Bandas laterales:</strong> <code>f<sub>c</sub> ± nf<sub>m</sub></code>, donde <code>n</code> es un entero positivo.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Controles de entrada -->
+      <div class="linea-ajustes drop-zone">
+        <div class="input-group">
+          <label for="amplitudPortadora">Amplitud de la Portadora (Ac):</label>
+          <input type="number" id="amplitudPortadora" placeholder="Ingrese Ac" />
+        </div>
+        <div class="input-group">
+          <label for="frecuenciaPortadora">Frecuencia de la Portadora (fc):</label>
+          <input type="number" id="frecuenciaPortadora" placeholder="Ingrese fc (Hz)" />
+        </div>
+        <div class="input-group">
+          <label for="amplitudModuladora">Amplitud de la Moduladora (Am):</label>
+          <input type="number" id="amplitudModuladora" placeholder="Ingrese Am" />
+        </div>
+        <div class="input-group">
+          <label for="frecuenciaModuladora">Frecuencia de la Moduladora (fm):</label>
+          <input type="number" id="frecuenciaModuladora" placeholder="Ingrese fm (Hz)" />
+        </div>
+        <div class="input-group">
+          <label for="indiceModulacion">Índice de Modulación (β):</label>
+          <input type="number" id="indiceModulacion" placeholder="Ingrese β" step="0.1" min="0" />
+        </div>
+        <button class="btn-calculate" onclick="calcularFrecuenciaModulada()">Generar Gráficas</button>
+
+        <!-- Gráficas -->
+        <div class="grafica-container">
+          <div class="grafica-box">
+            <h3>Señal Portadora</h3>
+            <canvas id="graficaPortadora" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Moduladora</h3>
+            <canvas id="graficaModuladora" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Modulada en FM</h3>
+            <canvas id="graficaModulada" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Modulada con Envolvente</h3>
+            <canvas id="graficaEnvolvente" width="500" height="150"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Contenido de la pestaña Modulación ASK y FSK -->
+    <div id="askFsk" class="tab-content">
+      <h2>Modulación ASK y FSK</h2>
+      <p>Explora la teoría y visualización gráfica de las modulaciones ASK y FSK.</p>
+
+      <!-- Sección teórica -->
+      <div id="teoriaASKFSK" class="teoria">
+        <h3>📡 ¿Qué son las modulaciones ASK y FSK?</h3>
+        <p>
+          Las modulaciones ASK (Amplitude Shift Keying) y FSK (Frequency Shift Keying) son técnicas de modulación digital utilizadas para transmitir datos binarios.
+        </p>
+
+        <h4>📊 Gráficas típicas en las modulaciones ASK y FSK</h4>
+
+        <!-- Modulación ASK -->
+        <div class="teoria-seccion">
+          <h5>🔸 1. Modulación ASK</h5>
+          <p>
+            En ASK, la amplitud de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una amplitud alta, y un nivel bajo (0) con una amplitud baja o nula.
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>s(t) = A cos(2πf<sub>c</sub>t), A = A<sub>1</sub> para 1, A = A<sub>0</sub> para 0</code>
+          </p>
+        </div>
+
+        <!-- Modulación FSK -->
+        <div class="teoria-seccion">
+          <h5>🔸 2. Modulación FSK</h5>
+          <p>
+            En FSK, la frecuencia de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una frecuencia <code>f<sub>1</sub></code>, y un nivel bajo (0) con una frecuencia <code>f<sub>0</sub></code>.
+          </p>
+          <p>
+            <strong>Ecuación:</strong>
+            <code>s(t) = A cos(2πf<sub>1</sub>t) para 1, s(t) = A cos(2πf<sub>0</sub>t) para 0</code>
+          </p>
+        </div>
+      </div>
+
+      <!-- Controles de entrada -->
+      <div class="linea-ajustes drop-zone">
+        <div class="input-group">
+          <label for="datosBinarios">Datos Binarios:</label>
+          <input type="text" id="datosBinarios" placeholder="Ejemplo: 101010" />
+        </div>
+        <div class="input-group">
+          <label for="frecuenciaPortadoraASK">Frecuencia Portadora (ASK):</label>
+          <input type="number" id="frecuenciaPortadoraASK" placeholder="Ingrese fc (Hz)" />
+        </div>
+        <div class="input-group">
+          <label for="frecuenciaPortadoraFSK1">Frecuencia FSK (1):</label>
+          <input type="number" id="frecuenciaPortadoraFSK1" placeholder="Ingrese f1 (Hz)" />
+        </div>
+        <div class="input-group">
+          <label for="frecuenciaPortadoraFSK0">Frecuencia FSK (0):</label>
+          <input type="number" id="frecuenciaPortadoraFSK0" placeholder="Ingrese f0 (Hz)" />
+        </div>
+        <button class="btn-calculate" onclick="generarGraficoASKFSK()">Generar Gráficas</button>
+
+        <!-- Gráficas -->
+        <div class="grafica-container">
+          <div class="grafica-box">
+            <h3>Señal Modulada ASK</h3>
+            <canvas id="graficaASK" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Modulada FSK</h3>
+            <canvas id="graficaFSK" width="500" height="150"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
-
-
