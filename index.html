@@ -47,7 +47,7 @@
 
       <div class="tab-content-container">
         <!-- Pestaña de Atenuación y Ganancia -->
-        <div id="atenuacion" class="tab-content">
+        <div id="atenuacion" class="tab-content" style="display: none;">
           <h2>Calculadora de Atenuación y Ganancia</h2>
           <p>
             Arrastra las figuras de atenuación o ganancia a la línea y digita el
@@ -108,7 +108,7 @@
         </div>
 
         <!-- Pestaña de Tiempo de Transmisión -->
-        <div id="transmision" class="tab-content">
+        <div id="transmision" class="tab-content" style="display: none;">
           <h2>Calculadora de Tiempo de Transmisión</h2>
           <p>
             Utiliza esta calculadora para determinar el tiempo necesario para
@@ -162,7 +162,7 @@
         </div>
 
         <!-- Pestaña de Calculadora dBm/dB -->
-        <div id="dbm" class="tab-content">
+        <div id="dbm" class="tab-content" style="display: none;">
           <h2>Calculadora de dBm/dB</h2>
           <p>
             Utiliza esta calculadora para convertir entre valores, realizar
@@ -260,7 +260,7 @@
           ></div>
         </div>
         <!-- Pestaña enlace de radio -->
-        <div id="enlaceRadio" class="tab-content">
+        <div id="enlaceRadio" class="tab-content" style="display: none;">
           <h2>Calculadora de Enlace de Radio</h2>
           <p>
             Arrastra las figuras correspondientes a los datos de entrada a la
@@ -362,7 +362,7 @@
       </div>
     </div>
     <!-- Contenido de la pestaña Amplitud Modulada -->
-    <div id="amplitudModulada" class="tab-content">
+    <div id="amplitudModulada" class="tab-content" style="display: none;">
       <h2>Amplitud Modulada (AM)</h2>
       <p>
         Explora la teoría y visualización gráfica de la modulación en amplitud.
@@ -449,38 +449,53 @@
           Utiliza los controles para ajustar los parámetros y observar cómo
           cambia la señal modulada.
         </p>
+        <!-- Controles de entrada -->
+      <div class="linea-ajustes drop-zone">
         <div class="input-group">
-          <label for="frecuenciaPortadora">Frecuencia Portadora (Hz):</label>
-          <input type="number" id="frecuenciaPortadora" value="1000" min="1" />
+          <label for="amplitudPortadoraAM">Amplitud de la Portadora (Ac):</label>
+          <input type="number" id="amplitudPortadoraAM" placeholder="Ingrese Ac" />
         </div>
         <div class="input-group">
-          <label for="frecuenciaModuladora">Frecuencia Moduladora (Hz):</label>
-          <input type="number" id="frecuenciaModuladora" value="100" min="1" />
+          <label for="frecuenciaPortadoraAM">Frecuencia de la Portadora (fc):</label>
+          <input type="number" id="frecuenciaPortadoraAM" placeholder="Ingrese fc (Hz)" />
         </div>
         <div class="input-group">
-          <label for="indiceModulacion">Índice de Modulación (m):</label>
-          <input
-            type="number"
-            id="indiceModulacion"
-            value="0.5"
-            step="0.1"
-            min="0"
-            max="1"
-          />
+          <label for="amplitudModuladoraAM">Amplitud de la Moduladora (Am):</label>
+          <input type="number" id="amplitudModuladoraAM" placeholder="Ingrese Am" />
         </div>
-        <button class="btn-calculate" onclick="generarGraficoAM()">
-          Generar Gráfico
-        </button>
-        <canvas
-          id="graficoCanvas"
-          width="800"
-          height="400"
-          style="border: 1px solid #ccc"
-        ></canvas>
+        <div class="input-group">
+          <label for="frecuenciaModuladoraAM">Frecuencia de la Moduladora (fm):</label>
+          <input type="number" id="frecuenciaModuladoraAM" placeholder="Ingrese fm (Hz)" />
+        </div>
+        <div class="input-group">
+          <label for="indiceModulacionAM">Índice de Modulación (m):</label>
+          <input type="number" id="indiceModulacionAM" placeholder="Ingrese m" step="0.1" min="0" max="1" />
+        </div>
+        <button class="btn-calculate" onclick="calcularAmplitudModulada()">Generar Gráficas</button>
+
+        <!-- Gráficas -->
+        <div class="grafica-container">
+          <div class="grafica-box">
+            <h3>Señal Portadora</h3>
+            <canvas id="graficaPortadoraAM" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Moduladora</h3>
+            <canvas id="graficaModuladoraAM" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Modulada en AM</h3>
+            <canvas id="graficaModuladaAM" width="500" height="150"></canvas>
+          </div>
+          <div class="grafica-box">
+            <h3>Señal Moduladora y Modulada</h3>
+            <canvas id="graficaEnvolventeAM" width="500" height="150"></canvas>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Contenido de la pestaña Frecuencia Modulada -->
-    <div id="frecuenciaModulada" class="tab-content">
+    <div id="frecuenciaModulada" class="tab-content" style="display: none;">
       <h2>Frecuencia Modulada (FM)</h2>
       <p>Calcula y visualiza la modulación en frecuencia.</p>
 
@@ -550,24 +565,24 @@
       <!-- Controles de entrada -->
       <div class="linea-ajustes drop-zone">
         <div class="input-group">
-          <label for="amplitudPortadora">Amplitud de la Portadora (Ac):</label>
-          <input type="number" id="amplitudPortadora" placeholder="Ingrese Ac" />
+          <label for="amplitudPortadoraFM">Amplitud de la Portadora (Ac):</label>
+          <input type="number" id="amplitudPortadoraFM" placeholder="Ingrese Ac" />
         </div>
         <div class="input-group">
-          <label for="frecuenciaPortadora">Frecuencia de la Portadora (fc):</label>
-          <input type="number" id="frecuenciaPortadora" placeholder="Ingrese fc (Hz)" />
+          <label for="frecuenciaPortadoraFM">Frecuencia de la Portadora (fc):</label>
+          <input type="number" id="frecuenciaPortadoraFM" placeholder="Ingrese fc (Hz)" />
         </div>
         <div class="input-group">
-          <label for="amplitudModuladora">Amplitud de la Moduladora (Am):</label>
-          <input type="number" id="amplitudModuladora" placeholder="Ingrese Am" />
+          <label for="amplitudModuladoraFM">Amplitud de la Moduladora (Am):</label>
+          <input type="number" id="amplitudModuladoraFM" placeholder="Ingrese Am" />
         </div>
         <div class="input-group">
-          <label for="frecuenciaModuladora">Frecuencia de la Moduladora (fm):</label>
-          <input type="number" id="frecuenciaModuladora" placeholder="Ingrese fm (Hz)" />
+          <label for="frecuenciaModuladoraFM">Frecuencia de la Moduladora (fm):</label>
+          <input type="number" id="frecuenciaModuladoraFM" placeholder="Ingrese fm (Hz)" />
         </div>
         <div class="input-group">
-          <label for="indiceModulacion">Índice de Modulación (β):</label>
-          <input type="number" id="indiceModulacion" placeholder="Ingrese β" step="0.1" min="0" />
+          <label for="indiceModulacionFM">Índice de Modulación (β):</label>
+          <input type="number" id="indiceModulacionFM" placeholder="Ingrese β" step="0.1" min="0" />
         </div>
         <button class="btn-calculate" onclick="calcularFrecuenciaModulada()">Generar Gráficas</button>
 
@@ -575,25 +590,25 @@
         <div class="grafica-container">
           <div class="grafica-box">
             <h3>Señal Portadora</h3>
-            <canvas id="graficaPortadora" width="500" height="150"></canvas>
+            <canvas id="graficaPortadoraFM" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
             <h3>Señal Moduladora</h3>
-            <canvas id="graficaModuladora" width="500" height="150"></canvas>
+            <canvas id="graficaModuladoraFM" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
             <h3>Señal Modulada en FM</h3>
-            <canvas id="graficaModulada" width="500" height="150"></canvas>
+            <canvas id="graficaModuladaFM" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
-            <h3>Señal Modulada con Envolvente</h3>
-            <canvas id="graficaEnvolvente" width="500" height="150"></canvas>
+            <h3>Señal Moduladora y Modulada</h3>
+            <canvas id="graficaEnvolventeFM" width="500" height="150"></canvas>
           </div>
         </div>
       </div>
     </div>
     <!-- Contenido de la pestaña Modulación ASK y FSK -->
-    <div id="askFsk" class="tab-content">
+    <div id="askFsk" class="tab-content" style="display: none;">
       <h2>Modulación ASK y FSK</h2>
       <p>Explora la teoría y visualización gráfica de las modulaciones ASK y FSK.</p>
 

@@ -9,17 +9,30 @@ function mostrarModulos() {
 
 function openTab(evt, tabName) {
   var i, tabcontent, tablinks;
+
+  // Ocultar todo el contenido de las pestañas
   tabcontent = document.getElementsByClassName("tab-content");
   for (i = 0; i < tabcontent.length; i++) {
     tabcontent[i].style.display = "none";
   }
+
+  // Eliminar la clase "active" de todos los botones
   tablinks = document.getElementsByClassName("tab-button");
   for (i = 0; i < tablinks.length; i++) {
     tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
+
+  // Mostrar el contenido de la pestaña seleccionada
   document.getElementById(tabName).style.display = "block";
+
+  // Añadir la clase "active" al botón seleccionado
   evt.currentTarget.className += " active";
 }
+
+// Asegúrate de que la primera pestaña esté visible al cargar la página
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelector(".tab-button:nth-child(1)").click();
+});
 
 function mwDbm(mw) {
   return 10 * Math.log10(mw);
@@ -812,19 +825,19 @@ let chartPortadora, chartModuladora, chartModulada, chartEnvolvente; // Store ch
 
 function calcularFrecuenciaModulada() {
   const amplitudPortadora = parseFloat(
-    document.getElementById("amplitudPortadora").value
+    document.getElementById("amplitudPortadoraFM").value
   );
   const frecuenciaPortadora = parseFloat(
-    document.getElementById("frecuenciaPortadora").value
+    document.getElementById("frecuenciaPortadoraFM").value
   );
   const amplitudModuladora = parseFloat(
-    document.getElementById("amplitudModuladora").value
+    document.getElementById("amplitudModuladoraFM").value
   );
   const frecuenciaModuladora = parseFloat(
-    document.getElementById("frecuenciaModuladora").value
+    document.getElementById("frecuenciaModuladoraFM").value
   );
   const indiceModulacion = parseFloat(
-    document.getElementById("indiceModulacion").value
+    document.getElementById("indiceModulacionFM").value
   );
 
   if (
@@ -873,11 +886,11 @@ function calcularFrecuenciaModulada() {
   if (chartEnvolvente) chartEnvolvente.destroy();
 
   // Crear nuevos gráficos
-  chartPortadora = graficar("graficaPortadora", t, portadora, "Señal Portadora");
-  chartModuladora = graficar("graficaModuladora", t, moduladora, "Señal Moduladora");
-  chartModulada = graficar("graficaModulada", t, modulada, "Señal Portadora Modulada");
+  chartPortadora = graficar("graficaPortadoraFM", t, portadora, "Señal Portadora");
+  chartModuladora = graficar("graficaModuladoraFM", t, moduladora, "Señal Moduladora");
+  chartModulada = graficar("graficaModuladaFM", t, modulada, "Señal Modulada en FM");
   chartEnvolvente = graficarModuladoraYModulada(
-    "graficaEnvolvente",
+    "graficaEnvolventeFM",
     t,
     moduladora,
     modulada,
@@ -1041,4 +1054,78 @@ function generarGraficoASKFSK() {
   // Graficar señales
   window.chartASK = graficar("graficaASK", t, ask, "Señal Modulada ASK");
   window.chartFSK = graficar("graficaFSK", t, fsk, "Señal Modulada FSK");
+}
+
+function calcularAmplitudModulada() {
+  const amplitudPortadora = parseFloat(
+    document.getElementById("amplitudPortadoraAM").value
+  );
+  const frecuenciaPortadora = parseFloat(
+    document.getElementById("frecuenciaPortadoraAM").value
+  );
+  const amplitudModuladora = parseFloat(
+    document.getElementById("amplitudModuladoraAM").value
+  );
+  const frecuenciaModuladora = parseFloat(
+    document.getElementById("frecuenciaModuladoraAM").value
+  );
+  const indiceModulacion = parseFloat(
+    document.getElementById("indiceModulacionAM").value
+  );
+
+  if (
+    isNaN(amplitudPortadora) ||
+    isNaN(frecuenciaPortadora) ||
+    isNaN(amplitudModuladora) ||
+    isNaN(frecuenciaModuladora) ||
+    isNaN(indiceModulacion) ||
+    amplitudPortadora <= 0 ||
+    frecuenciaPortadora <= 0 ||
+    amplitudModuladora <= 0 ||
+    frecuenciaModuladora <= 0 ||
+    indiceModulacion < 0 ||
+    indiceModulacion > 1
+  ) {
+    alert("Por favor, ingrese valores válidos para todas las entradas.");
+    return;
+  }
+
+  // Crear un vector de tiempo
+  const duration = 0.01; // Duración en segundos
+  const samples = 1000; // Número de muestras
+  const t = Array.from({ length: samples }, (_, i) => (i / samples) * duration);
+
+  // Calcular las señales
+  const moduladora = t.map(
+    (tiempo) =>
+      amplitudModuladora * Math.cos(2 * Math.PI * frecuenciaModuladora * tiempo)
+  );
+  const portadora = t.map(
+    (tiempo) =>
+      amplitudPortadora * Math.cos(2 * Math.PI * frecuenciaPortadora * tiempo)
+  );
+  const modulada = t.map(
+    (tiempo, i) =>
+      amplitudPortadora *
+      (1 + indiceModulacion * moduladora[i] / amplitudModuladora) *
+      Math.cos(2 * Math.PI * frecuenciaPortadora * tiempo)
+  );
+
+  // Limpiar gráficos previos si existen
+  if (chartPortadora) chartPortadora.destroy();
+  if (chartModuladora) chartModuladora.destroy();
+  if (chartModulada) chartModulada.destroy();
+  if (chartEnvolvente) chartEnvolvente.destroy();
+
+  // Crear nuevos gráficos
+  chartPortadora = graficar("graficaPortadoraAM", t, portadora, "Señal Portadora");
+  chartModuladora = graficar("graficaModuladoraAM", t, moduladora, "Señal Moduladora");
+  chartModulada = graficar("graficaModuladaAM", t, modulada, "Señal Modulada en AM");
+  chartEnvolvente = graficarModuladoraYModulada(
+    "graficaEnvolventeAM",
+    t,
+    moduladora,
+    modulada,
+    "Señal Moduladora y Modulada"
+  );
 }
