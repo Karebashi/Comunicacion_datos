@@ -47,7 +47,7 @@
 
       <div class="tab-content-container">
         <!-- Pestaña de Atenuación y Ganancia -->
-        <div id="atenuacion" class="tab-content" style="display: none;">
+        <div id="atenuacion" class="tab-content">
           <h2>Calculadora de Atenuación y Ganancia</h2>
           <p>
             Arrastra las figuras de atenuación o ganancia a la línea y digita el
@@ -108,7 +108,7 @@
         </div>
 
         <!-- Pestaña de Tiempo de Transmisión -->
-        <div id="transmision" class="tab-content" style="display: none;">
+        <div id="transmision" class="tab-content">
           <h2>Calculadora de Tiempo de Transmisión</h2>
           <p>
             Utiliza esta calculadora para determinar el tiempo necesario para
@@ -162,7 +162,7 @@
         </div>
 
         <!-- Pestaña de Calculadora dBm/dB -->
-        <div id="dbm" class="tab-content" style="display: none;">
+        <div id="dbm" class="tab-content">
           <h2>Calculadora de dBm/dB</h2>
           <p>
             Utiliza esta calculadora para convertir entre valores, realizar
@@ -260,7 +260,7 @@
           ></div>
         </div>
         <!-- Pestaña enlace de radio -->
-        <div id="enlaceRadio" class="tab-content" style="display: none;">
+        <div id="enlaceRadio" class="tab-content">
           <h2>Calculadora de Enlace de Radio</h2>
           <p>
             Arrastra las figuras correspondientes a los datos de entrada a la
@@ -362,7 +362,7 @@
       </div>
     </div>
     <!-- Contenido de la pestaña Amplitud Modulada -->
-    <div id="amplitudModulada" class="tab-content" style="display: none;">
+    <div id="amplitudModulada" class="tab-content">
       <h2>Amplitud Modulada (AM)</h2>
       <p>
         Explora la teoría y visualización gráfica de la modulación en amplitud.
@@ -441,35 +441,27 @@
           </ul>
         </div>
       </div>
-
-      <!-- Sección gráfica -->
-      <div id="graficoAM" class="grafico">
-        <h3>Visualización Gráfica</h3>
-        <p>
-          Utiliza los controles para ajustar los parámetros y observar cómo
-          cambia la señal modulada.
-        </p>
         <!-- Controles de entrada -->
       <div class="linea-ajustes drop-zone">
         <div class="input-group">
-          <label for="amplitudPortadoraAM">Amplitud de la Portadora (Ac):</label>
+          <label for="amplitudPortadora">Amplitud de la Portadora (Ac):</label>
           <input type="number" id="amplitudPortadoraAM" placeholder="Ingrese Ac" />
         </div>
         <div class="input-group">
-          <label for="frecuenciaPortadoraAM">Frecuencia de la Portadora (fc):</label>
+          <label for="frecuenciaPortadora">Frecuencia de la Portadora (fc):</label>
           <input type="number" id="frecuenciaPortadoraAM" placeholder="Ingrese fc (Hz)" />
         </div>
         <div class="input-group">
-          <label for="amplitudModuladoraAM">Amplitud de la Moduladora (Am):</label>
+          <label for="amplitudModuladora">Amplitud de la Moduladora (Am):</label>
           <input type="number" id="amplitudModuladoraAM" placeholder="Ingrese Am" />
         </div>
         <div class="input-group">
-          <label for="frecuenciaModuladoraAM">Frecuencia de la Moduladora (fm):</label>
+          <label for="frecuenciaModuladora">Frecuencia de la Moduladora (fm):</label>
           <input type="number" id="frecuenciaModuladoraAM" placeholder="Ingrese fm (Hz)" />
         </div>
         <div class="input-group">
-          <label for="indiceModulacionAM">Índice de Modulación (m):</label>
-          <input type="number" id="indiceModulacionAM" placeholder="Ingrese m" step="0.1" min="0" max="1" />
+          <label for="indiceModulacion">Índice de Modulación (β):</label>
+          <input type="number" id="indiceModulacionAM" placeholder="Ingrese β" step="0.1" min="0" />
         </div>
         <button class="btn-calculate" onclick="calcularAmplitudModulada()">Generar Gráficas</button>
 
@@ -477,207 +469,208 @@
         <div class="grafica-container">
           <div class="grafica-box">
             <h3>Señal Portadora</h3>
-            <canvas id="graficaPortadoraAM" width="500" height="150"></canvas>
+            <canvas id="graficaPortadora" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
             <h3>Señal Moduladora</h3>
-            <canvas id="graficaModuladoraAM" width="500" height="150"></canvas>
+            <canvas id="graficaModuladora" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
             <h3>Señal Modulada en AM</h3>
-            <canvas id="graficaModuladaAM" width="500" height="150"></canvas>
+            <canvas id="graficaModulada" width="500" height="150"></canvas>
           </div>
           <div class="grafica-box">
-            <h3>Señal Moduladora y Modulada</h3>
-            <canvas id="graficaEnvolventeAM" width="500" height="150"></canvas>
+            <h3>Señal Modulada con Envolvente</h3>
+            <canvas id="graficaEnvolvente" width="500" height="150"></canvas>
           </div>
         </div>
       </div>
     </div>
-    <!-- Contenido de la pestaña Frecuencia Modulada -->
-    <div id="frecuenciaModulada" class="tab-content" style="display: none;">
-      <h2>Frecuencia Modulada (FM)</h2>
-      <p>Calcula y visualiza la modulación en frecuencia.</p>
-
-      <!-- Sección teórica -->
-      <div id="teoriaFM" class="teoria">
-        <h3>📡 ¿Qué es la Frecuencia Modulada (FM)?</h3>
-        <p>
-          La Frecuencia Modulada (FM) es una técnica de modulación en la que se varía la frecuencia de una señal portadora de alta frecuencia en función de la amplitud de una señal de mensaje (moduladora), que generalmente es de baja frecuencia. Esta técnica es ampliamente utilizada en la transmisión de señales de audio de alta calidad, como en la radio FM.
-        </p>
-
-        <h4>📊 Gráficas típicas en la modulación FM</h4>
-
-        <!-- Señal moduladora -->
-        <div class="teoria-seccion">
-          <h5>🔸 1. Señal moduladora (mensaje)</h5>
-          <p>
-            Es la señal de información original, generalmente una onda de baja frecuencia (como audio).
-          </p>
-          <p>
-            <strong>Ecuación:</strong>
-            <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code>
-          </p>
-        </div>
-
-        <!-- Señal portadora -->
-        <div class="teoria-seccion">
-          <h5>🔸 2. Señal portadora</h5>
-          <p>
-            Señal de alta frecuencia que sirve como base para transmitir la información.
-          </p>
-          <p>
-            <strong>Ecuación:</strong>
-            <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code>
-          </p>
-        </div>
-
-        <!-- Señal FM -->
-        <div class="teoria-seccion">
-          <h5>🔸 3. Señal FM (modulada en frecuencia)</h5>
-          <p>Es el resultado de aplicar la modulación FM.</p>
-          <p>
-            <strong>Ecuación:</strong>
-            <code
-              >s(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t +
-              β sin(2πf<sub>m</sub>t))</code
-            >
-          </p>
-        </div>
-
-        <!-- Espectro de frecuencia -->
-        <div class="teoria-seccion">
-          <h5>🔸 4. Espectro de frecuencia de la señal FM</h5>
-          <p>
-            La señal FM genera un espectro con múltiples componentes debido a las bandas laterales, que dependen del índice de modulación (<code>β</code>).
-          </p>
-          <ul>
-            <li>
-              <strong>Portadora:</strong> <code>f<sub>c</sub></code>
-            </li>
-            <li>
-              <strong>Bandas laterales:</strong> <code>f<sub>c</sub> ± nf<sub>m</sub></code>, donde <code>n</code> es un entero positivo.
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Controles de entrada -->
-      <div class="linea-ajustes drop-zone">
-        <div class="input-group">
-          <label for="amplitudPortadoraFM">Amplitud de la Portadora (Ac):</label>
-          <input type="number" id="amplitudPortadoraFM" placeholder="Ingrese Ac" />
-        </div>
-        <div class="input-group">
-          <label for="frecuenciaPortadoraFM">Frecuencia de la Portadora (fc):</label>
-          <input type="number" id="frecuenciaPortadoraFM" placeholder="Ingrese fc (Hz)" />
-        </div>
-        <div class="input-group">
-          <label for="amplitudModuladoraFM">Amplitud de la Moduladora (Am):</label>
-          <input type="number" id="amplitudModuladoraFM" placeholder="Ingrese Am" />
-        </div>
-        <div class="input-group">
-          <label for="frecuenciaModuladoraFM">Frecuencia de la Moduladora (fm):</label>
-          <input type="number" id="frecuenciaModuladoraFM" placeholder="Ingrese fm (Hz)" />
-        </div>
-        <div class="input-group">
-          <label for="indiceModulacionFM">Índice de Modulación (β):</label>
-          <input type="number" id="indiceModulacionFM" placeholder="Ingrese β" step="0.1" min="0" />
-        </div>
-        <button class="btn-calculate" onclick="calcularFrecuenciaModulada()">Generar Gráficas</button>
-
-        <!-- Gráficas -->
-        <div class="grafica-container">
-          <div class="grafica-box">
-            <h3>Señal Portadora</h3>
-            <canvas id="graficaPortadoraFM" width="500" height="150"></canvas>
-          </div>
-          <div class="grafica-box">
-            <h3>Señal Moduladora</h3>
-            <canvas id="graficaModuladoraFM" width="500" height="150"></canvas>
-          </div>
-          <div class="grafica-box">
-            <h3>Señal Modulada en FM</h3>
-            <canvas id="graficaModuladaFM" width="500" height="150"></canvas>
-          </div>
-          <div class="grafica-box">
-            <h3>Señal Moduladora y Modulada</h3>
-            <canvas id="graficaEnvolventeFM" width="500" height="150"></canvas>
-          </div>
-        </div>
-      </div>
     </div>
-    <!-- Contenido de la pestaña Modulación ASK y FSK -->
-    <div id="askFsk" class="tab-content" style="display: none;">
-      <h2>Modulación ASK y FSK</h2>
-      <p>Explora la teoría y visualización gráfica de las modulaciones ASK y FSK.</p>
-
-      <!-- Sección teórica -->
-      <div id="teoriaASKFSK" class="teoria">
-        <h3>📡 ¿Qué son las modulaciones ASK y FSK?</h3>
-        <p>
-          Las modulaciones ASK (Amplitude Shift Keying) y FSK (Frequency Shift Keying) son técnicas de modulación digital utilizadas para transmitir datos binarios.
-        </p>
-
-        <h4>📊 Gráficas típicas en las modulaciones ASK y FSK</h4>
-
-        <!-- Modulación ASK -->
-        <div class="teoria-seccion">
-          <h5>🔸 1. Modulación ASK</h5>
+      <!-- Contenido de la pestaña Frecuencia Modulada -->
+      <div id="frecuenciaModulada" class="tab-content" style="display: none;">
+        <h2>Frecuencia Modulada (FM)</h2>
+        <p>Calcula y visualiza la modulación en frecuencia.</p>
+  
+        <!-- Sección teórica -->
+        <div id="teoriaFM" class="teoria">
+          <h3>📡 ¿Qué es la Frecuencia Modulada (FM)?</h3>
           <p>
-            En ASK, la amplitud de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una amplitud alta, y un nivel bajo (0) con una amplitud baja o nula.
+            La Frecuencia Modulada (FM) es una técnica de modulación en la que se varía la frecuencia de una señal portadora de alta frecuencia en función de la amplitud de una señal de mensaje (moduladora), que generalmente es de baja frecuencia. Esta técnica es ampliamente utilizada en la transmisión de señales de audio de alta calidad, como en la radio FM.
           </p>
-          <p>
-            <strong>Ecuación:</strong>
-            <code>s(t) = A cos(2πf<sub>c</sub>t), A = A<sub>1</sub> para 1, A = A<sub>0</sub> para 0</code>
-          </p>
-        </div>
-
-        <!-- Modulación FSK -->
-        <div class="teoria-seccion">
-          <h5>🔸 2. Modulación FSK</h5>
-          <p>
-            En FSK, la frecuencia de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una frecuencia <code>f<sub>1</sub></code>, y un nivel bajo (0) con una frecuencia <code>f<sub>0</sub></code>.
-          </p>
-          <p>
-            <strong>Ecuación:</strong>
-            <code>s(t) = A cos(2πf<sub>1</sub>t) para 1, s(t) = A cos(2πf<sub>0</sub>t) para 0</code>
-          </p>
-        </div>
-      </div>
-
-      <!-- Controles de entrada -->
-      <div class="linea-ajustes drop-zone">
-        <div class="input-group">
-          <label for="datosBinarios">Datos Binarios:</label>
-          <input type="text" id="datosBinarios" placeholder="Ejemplo: 101010" />
-        </div>
-        <div class="input-group">
-          <label for="frecuenciaPortadoraASK">Frecuencia Portadora (ASK):</label>
-          <input type="number" id="frecuenciaPortadoraASK" placeholder="Ingrese fc (Hz)" />
-        </div>
-        <div class="input-group">
-          <label for="frecuenciaPortadoraFSK1">Frecuencia FSK (1):</label>
-          <input type="number" id="frecuenciaPortadoraFSK1" placeholder="Ingrese f1 (Hz)" />
-        </div>
-        <div class="input-group">
-          <label for="frecuenciaPortadoraFSK0">Frecuencia FSK (0):</label>
-          <input type="number" id="frecuenciaPortadoraFSK0" placeholder="Ingrese f0 (Hz)" />
-        </div>
-        <button class="btn-calculate" onclick="generarGraficoASKFSK()">Generar Gráficas</button>
-
-        <!-- Gráficas -->
-        <div class="grafica-container">
-          <div class="grafica-box">
-            <h3>Señal Modulada ASK</h3>
-            <canvas id="graficaASK" width="500" height="150"></canvas>
+  
+          <h4>📊 Gráficas típicas en la modulación FM</h4>
+  
+          <!-- Señal moduladora -->
+          <div class="teoria-seccion">
+            <h5>🔸 1. Señal moduladora (mensaje)</h5>
+            <p>
+              Es la señal de información original, generalmente una onda de baja frecuencia (como audio).
+            </p>
+            <p>
+              <strong>Ecuación:</strong>
+              <code>m(t) = A<sub>m</sub> cos(2πf<sub>m</sub>t)</code>
+            </p>
           </div>
-          <div class="grafica-box">
-            <h3>Señal Modulada FSK</h3>
-            <canvas id="graficaFSK" width="500" height="150"></canvas>
+  
+          <!-- Señal portadora -->
+          <div class="teoria-seccion">
+            <h5>🔸 2. Señal portadora</h5>
+            <p>
+              Señal de alta frecuencia que sirve como base para transmitir la información.
+            </p>
+            <p>
+              <strong>Ecuación:</strong>
+              <code>c(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t)</code>
+            </p>
+          </div>
+  
+          <!-- Señal FM -->
+          <div class="teoria-seccion">
+            <h5>🔸 3. Señal FM (modulada en frecuencia)</h5>
+            <p>Es el resultado de aplicar la modulación FM.</p>
+            <p>
+              <strong>Ecuación:</strong>
+              <code
+                >s(t) = A<sub>c</sub> cos(2πf<sub>c</sub>t +
+                β sin(2πf<sub>m</sub>t))</code
+              >
+            </p>
+          </div>
+  
+          <!-- Espectro de frecuencia -->
+          <div class="teoria-seccion">
+            <h5>🔸 4. Espectro de frecuencia de la señal FM</h5>
+            <p>
+              La señal FM genera un espectro con múltiples componentes debido a las bandas laterales, que dependen del índice de modulación (<code>β</code>).
+            </p>
+            <ul>
+              <li>
+                <strong>Portadora:</strong> <code>f<sub>c</sub></code>
+              </li>
+              <li>
+                <strong>Bandas laterales:</strong> <code>f<sub>c</sub> ± nf<sub>m</sub></code>, donde <code>n</code> es un entero positivo.
+              </li>
+            </ul>
           </div>
         </div>
+  
+        <!-- Controles de entrada -->
+        <div class="linea-ajustes drop-zone">
+          <div class="input-group">
+            <label for="amplitudPortadoraFM">Amplitud de la Portadora (Ac):</label>
+            <input type="number" id="amplitudPortadoraFM" placeholder="Ingrese Ac" />
+          </div>
+          <div class="input-group">
+            <label for="frecuenciaPortadoraFM">Frecuencia de la Portadora (fc):</label>
+            <input type="number" id="frecuenciaPortadoraFM" placeholder="Ingrese fc (Hz)" />
+          </div>
+          <div class="input-group">
+            <label for="amplitudModuladoraFM">Amplitud de la Moduladora (Am):</label>
+            <input type="number" id="amplitudModuladoraFM" placeholder="Ingrese Am" />
+          </div>
+          <div class="input-group">
+            <label for="frecuenciaModuladoraFM">Frecuencia de la Moduladora (fm):</label>
+            <input type="number" id="frecuenciaModuladoraFM" placeholder="Ingrese fm (Hz)" />
+          </div>
+          <div class="input-group">
+            <label for="indiceModulacionFM">Índice de Modulación (β):</label>
+            <input type="number" id="indiceModulacionFM" placeholder="Ingrese β" step="0.1" min="0" />
+          </div>
+          <button class="btn-calculate" onclick="calcularFrecuenciaModulada()">Generar Gráficas</button>
+  
+          <!-- Gráficas -->
+          <div class="grafica-container">
+            <div class="grafica-box">
+              <h3>Señal Portadora</h3>
+              <canvas id="graficaPortadoraFM" width="500" height="150"></canvas>
+            </div>
+            <div class="grafica-box">
+              <h3>Señal Moduladora</h3>
+              <canvas id="graficaModuladoraFM" width="500" height="150"></canvas>
+            </div>
+            <div class="grafica-box">
+              <h3>Señal Modulada en FM</h3>
+              <canvas id="graficaModuladaFM" width="500" height="150"></canvas>
+            </div>
+            <div class="grafica-box">
+              <h3>Señal Moduladora y Modulada</h3>
+              <canvas id="graficaEnvolventeFM" width="500" height="150"></canvas>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </body>
-</html>
+      <!-- Contenido de la pestaña Modulación ASK y FSK -->
+      <div id="askFsk" class="tab-content" style="display: none;">
+        <h2>Modulación ASK y FSK</h2>
+        <p>Explora la teoría y visualización gráfica de las modulaciones ASK y FSK.</p>
+  
+        <!-- Sección teórica -->
+        <div id="teoriaASKFSK" class="teoria">
+          <h3>📡 ¿Qué son las modulaciones ASK y FSK?</h3>
+          <p>
+            Las modulaciones ASK (Amplitude Shift Keying) y FSK (Frequency Shift Keying) son técnicas de modulación digital utilizadas para transmitir datos binarios.
+          </p>
+  
+          <h4>📊 Gráficas típicas en las modulaciones ASK y FSK</h4>
+  
+          <!-- Modulación ASK -->
+          <div class="teoria-seccion">
+            <h5>🔸 1. Modulación ASK</h5>
+            <p>
+              En ASK, la amplitud de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una amplitud alta, y un nivel bajo (0) con una amplitud baja o nula.
+            </p>
+            <p>
+              <strong>Ecuación:</strong>
+              <code>s(t) = A cos(2πf<sub>c</sub>t), A = A<sub>1</sub> para 1, A = A<sub>0</sub> para 0</code>
+            </p>
+          </div>
+  
+          <!-- Modulación FSK -->
+          <div class="teoria-seccion">
+            <h5>🔸 2. Modulación FSK</h5>
+            <p>
+              En FSK, la frecuencia de la señal portadora cambia en función de los datos binarios. Un nivel alto (1) se representa con una frecuencia <code>f<sub>1</sub></code>, y un nivel bajo (0) con una frecuencia <code>f<sub>0</sub></code>.
+            </p>
+            <p>
+              <strong>Ecuación:</strong>
+              <code>s(t) = A cos(2πf<sub>1</sub>t) para 1, s(t) = A cos(2πf<sub>0</sub>t) para 0</code>
+            </p>
+          </div>
+        </div>
+  
+        <!-- Controles de entrada -->
+        <div class="linea-ajustes drop-zone">
+          <div class="input-group">
+            <label for="datosBinarios">Datos Binarios:</label>
+            <input type="text" id="datosBinarios" placeholder="Ejemplo: 101010" />
+          </div>
+          <div class="input-group">
+            <label for="frecuenciaPortadoraASK">Frecuencia Portadora (ASK):</label>
+            <input type="number" id="frecuenciaPortadoraASK" placeholder="Ingrese fc (Hz)" />
+          </div>
+          <div class="input-group">
+            <label for="frecuenciaPortadoraFSK1">Frecuencia FSK (1):</label>
+            <input type="number" id="frecuenciaPortadoraFSK1" placeholder="Ingrese f1 (Hz)" />
+          </div>
+          <div class="input-group">
+            <label for="frecuenciaPortadoraFSK0">Frecuencia FSK (0):</label>
+            <input type="number" id="frecuenciaPortadoraFSK0" placeholder="Ingrese f0 (Hz)" />
+          </div>
+          <button class="btn-calculate" onclick="generarGraficoASKFSK()">Generar Gráficas</button>
+  
+          <!-- Gráficas -->
+          <div class="grafica-container">
+            <div class="grafica-box">
+              <h3>Señal Modulada ASK</h3>
+              <canvas id="graficaASK" width="500" height="150"></canvas>
+            </div>
+            <div class="grafica-box">
+              <h3>Señal Modulada FSK</h3>
+              <canvas id="graficaFSK" width="500" height="150"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </body>
+  </html>
